@@ -23,6 +23,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val test = "test1"
+        val test2 = "test2"
+        
         val oneBtn = findViewById<TextView>(R.id.oneBtn)
         val twoBtn = findViewById<TextView>(R.id.twoBtn)
         val threeBtn = findViewById<TextView>(R.id.threeBtn)
