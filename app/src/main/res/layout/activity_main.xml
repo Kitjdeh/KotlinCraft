@@ -75,7 +75,7 @@
             android:layout_weight="1"
             android:background="@drawable/btn_frame"
             android:gravity="center"
-            android:text="+"
+            android:text="*"
             android:textSize="40sp"
             android:textStyle="bold" />
 
@@ -196,14 +196,14 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/plus_minusBtn"
+            android:id="@+id/deletBtn"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_margin="5dp"
             android:layout_weight="1"
             android:background="@drawable/btn_frame"
             android:gravity="center"
-            android:text="+/-"
+            android:text="←"
             android:textSize="40sp"
             android:textStyle="bold" />
     </LinearLayout>
