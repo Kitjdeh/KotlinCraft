@@ -8,6 +8,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.text.isDigitsOnly
 import java.util.Stack
+import kotlin.math.round
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -185,13 +187,12 @@ class MainActivity : AppCompatActivity() {
         for (word in expression) {
             if (word.isDigit() || word.equals(".")) {
                 //.이 이미 있다면 break
-                if (words.contains(".")){
+                if (words.contains(".")) {
                     Toast.makeText(this, "잘못된 수식입니다.", Toast.LENGTH_SHORT).show()
                     break
                 }
                 words += word
-            }
-            else {
+            } else {
                 //isDigt가 아니다 -> 연산 or ()이니 계산된 words 를 넣어준다.
                 if (words.isNotEmpty()) {
                     stack.add(words)
@@ -232,7 +233,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun calculateStack() {
         loop@ for (num in postFixStack) {
-//        while (num in postFixStack){
             if (num.isDigitsOnly()) {
                 resultStack.add(num.toDouble())
             } else if (num == "+") {
@@ -253,7 +253,7 @@ class MainActivity : AppCompatActivity() {
             } else if (num == "/") {
                 val secondNum = resultStack.pop()
                 val firstNum = resultStack.pop()
-                if (secondNum == 0) {
+                if ((round(secondNum * 1000) / 1000).roundToInt() == 0) {
                     expression = "에러 : 분모가 0입니다."
                     break@loop
                 }
@@ -266,6 +266,5 @@ class MainActivity : AppCompatActivity() {
         if (expression != "에러 : 분모가 0입니다.") {
             expression = resultStack.pop().toString()
         }
-
     }
 }
