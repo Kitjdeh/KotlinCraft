@@ -1,11 +1,14 @@
 package com.ncc.kotlincraft
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.text.isDigitsOnly
 import java.util.Stack
 import kotlin.math.round
@@ -56,7 +59,13 @@ class MainActivity : AppCompatActivity() {
         val rightParenthesis = findViewById<TextView>(R.id.right_parenthesis)
         val result = findViewById<TextView>(R.id.result)
         val pointBtn = findViewById<TextView>(R.id.pointBtn)
+        val recordBtn = findViewById<AppCompatButton>(R.id.btn_mainToRecord)
 
+
+        recordBtn.setOnClickListener {
+            val intent = Intent(this,RecordActivity::class.java)
+            startActivity(intent)
+        }
         oneBtn.setOnClickListener {
             expression += "1"
             num += "1"
