@@ -1,12 +1,17 @@
 package com.ncc.kotlincraft
 
-import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.text.isDigitsOnly
+import androidx.room.Room
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Stack
 import kotlin.math.round
 import kotlin.math.roundToInt
@@ -15,6 +20,9 @@ class MainActivity : AppCompatActivity() {
 
     //expression : 중위 표현식
     private var expression = ""
+
+    //전달할 중위 표현식
+    private var saveExpression = ""
 
     //후위 표현식
     private val resultStack = Stack<Double>()
@@ -28,9 +36,13 @@ class MainActivity : AppCompatActivity() {
     val stack = Stack<String>()
     var num = ""
     val value = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
         val test = "test1"
         val test2 = "test2"
         val test3 = "test3"
@@ -56,7 +68,13 @@ class MainActivity : AppCompatActivity() {
         val rightParenthesis = findViewById<TextView>(R.id.right_parenthesis)
         val result = findViewById<TextView>(R.id.result)
         val pointBtn = findViewById<TextView>(R.id.pointBtn)
+        val recordBtn = findViewById<AppCompatButton>(R.id.btn_mainToRecord)
 
+
+        recordBtn.setOnClickListener {
+            val intent = Intent(this, RecordActivity::class.java)
+            startActivity(intent)
+        }
         oneBtn.setOnClickListener {
             expression += "1"
             num += "1"
@@ -193,9 +211,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         calculatorBtn.setOnClickListener {
-
+            saveExpression = expression
             postFix()
             result.text = expression
+
+
         }
     }
 
@@ -262,6 +282,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun calculateStack() {
+        //RoomDb인스턴스 생성
+        val db = Room.databaseBuilder(
+            applicationContext,
+            RecordDatabase::class.java, "record"
+        ).build()
+
         loop@ for (num in postFixStack) {
             if (num.isDigitsOnly() || num.contains(".")) {
                 resultStack.add(num.toDouble())
@@ -294,7 +320,19 @@ class MainActivity : AppCompatActivity() {
             Log.d("resultStack", resultStack.toString())
         }
         if (expression != "에러 : 분모가 0입니다.") {
+//            //결과값 저장
+//            val recordDao = db.recordDao()
+
+
             expression = resultStack.pop().toString()
+
+            // DB에 접근 할 대 메인 쓰레드를 쓰면 에러가 나기 때문에 Dispathcer.io로 백그라운드 스레드에서 작업
+            CoroutineScope(Dispatchers.IO).launch {
+                saveExpression += "=$expression"
+                val record = Record(null, saveExpression)
+                db.recordDao().insertRecord(record)
+            }
+
         }
     }
 }
