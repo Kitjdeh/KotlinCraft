@@ -1,6 +1,7 @@
 package com.ncc.kotlincraft
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -214,7 +215,27 @@ class MainActivity : AppCompatActivity() {
             saveExpression = expression
             postFix()
             result.text = expression
+            if (expression.toDouble().toInt() > 0){
+                when (val number = expression.toDouble().toInt() ) {
+                    in 0..10 -> {
+                        Log.d("0~10",number.toString())
+                        result.setBackgroundColor(Color.YELLOW)
+                    }
+                    in 11..100 -> {
+                        Log.d("11~100",number.toString())
+                        result.setBackgroundColor(Color.GREEN)
+                    }
+                    in 101..1000 -> {
+                        Log.d("101~1000",number.toString())
+                        result.setBackgroundColor(Color.RED)
+                    }
+                    else -> {
+                        Log.d("1001~",number.toString())
+                        result.setBackgroundColor(Color.BLUE)
+                    }
+                }
 
+            }
 
         }
     }
@@ -277,7 +298,7 @@ class MainActivity : AppCompatActivity() {
         while (stack.isNotEmpty()) {
             postFixStack.add(stack.pop())
         }
-        Log.d(postFixStack.toString(), "${stack.toString()}")
+        Log.d(postFixStack.toString(), "$stack")
         calculateStack()
     }
 
@@ -287,7 +308,7 @@ class MainActivity : AppCompatActivity() {
             applicationContext,
             RecordDatabase::class.java, "record"
         ).build()
-
+        println("TEST TEST TEST DB1`:${db}")
         loop@ for (num in postFixStack) {
             if (num.isDigitsOnly() || num.contains(".")) {
                 resultStack.add(num.toDouble())
@@ -310,14 +331,14 @@ class MainActivity : AppCompatActivity() {
                 val secondNum = resultStack.pop()
                 val firstNum = resultStack.pop()
                 if ((round(secondNum * 1000) / 1000).roundToInt() == 0) {
-                    expression = "에러 : 분모가 0입니다."
+                    expression = ""
                     break@loop
                 }
                 val answer = firstNum / secondNum
                 resultStack.add(answer)
             }
-            Log.d("postFixStack", postFixStack.toString())
-            Log.d("resultStack", resultStack.toString())
+//            Log.d("postFixStack", postFixStack.toString())
+//            Log.d("resultStack", resultStack.toString())
         }
         if (expression != "에러 : 분모가 0입니다.") {
 //            //결과값 저장

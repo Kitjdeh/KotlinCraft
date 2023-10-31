@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">KotlinCraft</string>
+    <string name="record_main">계산기로</string>
+    <string name="main_record">기록확인</string>
 </resources>
