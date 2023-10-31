@@ -1,6 +1,7 @@
 package com.ncc.kotlincraft
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,15 +10,18 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import androidx.room.RoomDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class RecordActivity : AppCompatActivity() {
 
+    var db: RecordDatabase? = null
+
     // 받아올 records를 사용할 record List 생성
     var records = arrayListOf<Record>(
-        Record(-1, "KKKK")
+
     )
 
     @SuppressLint("NotifyDataSetChanged")
@@ -30,28 +34,21 @@ class RecordActivity : AppCompatActivity() {
 
 
         //RoomDb인스턴스 생성
-        val db = Room.databaseBuilder(
-            applicationContext,
-            RecordDatabase::class.java, "record"
-        ).build()
-        println("TEST TEST TEST DB2`:${db}")
-        CoroutineScope(Dispatchers.IO).launch {
-            val recordDao = db.recordDao()
-            records = recordDao.getAll() as ArrayList<Record>
-            Log.d("레코드", records.toString())
+        db = RecordDatabase.getInstance(this)
 
+
+//        println("TEST TEST TEST DB2`:${db}")
+        CoroutineScope(Dispatchers.IO).launch {
+            val recordDao = db!!.recordDao()
+            records = recordDao.getAll() as ArrayList<Record>
             //records가 채워 졌으니 adapter와  연결
             var recordAdapter = RecordAdapter(records)
-
             // 어댑터 연결
             rv_record.adapter = recordAdapter
-
             // 어댑터의 layoutmanager 연결
             rv_record.layoutManager = LinearLayoutManager(this@RecordActivity)
 
         }
-
-
         btnMainToRecord.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)

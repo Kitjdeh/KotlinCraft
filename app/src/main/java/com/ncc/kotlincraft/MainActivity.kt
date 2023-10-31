@@ -19,6 +19,8 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
+     var db : RecordDatabase? =null
+
     //expression : 중위 표현식
     private var expression = ""
 
@@ -43,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        db = RecordDatabase.getInstance(this)
 
         val test = "test1"
         val test2 = "test2"
@@ -303,12 +306,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun calculateStack() {
-        //RoomDb인스턴스 생성
-        val db = Room.databaseBuilder(
-            applicationContext,
-            RecordDatabase::class.java, "record"
-        ).build()
-        println("TEST TEST TEST DB1`:${db}")
+//        var db: RecordDatabase? = null
+//        //RoomDb인스턴스 생성
+//        val db = Room.databaseBuilder(
+//            applicationContext,
+//            RecordDatabase::class.java, "record"
+//        ).build()
+//       db = RecordDatabase.getInstance(this)
+//        println("TEST TEST TEST DB1`:${db}")
         loop@ for (num in postFixStack) {
             if (num.isDigitsOnly() || num.contains(".")) {
                 resultStack.add(num.toDouble())
@@ -343,15 +348,13 @@ class MainActivity : AppCompatActivity() {
         if (expression != "에러 : 분모가 0입니다.") {
 //            //결과값 저장
 //            val recordDao = db.recordDao()
-
-
             expression = resultStack.pop().toString()
 
             // DB에 접근 할 대 메인 쓰레드를 쓰면 에러가 나기 때문에 Dispathcer.io로 백그라운드 스레드에서 작업
             CoroutineScope(Dispatchers.IO).launch {
                 saveExpression += "=$expression"
                 val record = Record(null, saveExpression)
-                db.recordDao().insertRecord(record)
+                db!!.recordDao().insertRecord(record)
             }
 
         }
