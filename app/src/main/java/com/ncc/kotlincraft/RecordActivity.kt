@@ -46,15 +46,9 @@ class RecordActivity : AppCompatActivity(
             records = recordDao.getAll() as ArrayList<Record>
             //백그라운드 스레드 작업이 끝났으니 main스레드 에서 UI 변경 작업 진행
             withContext(Dispatchers.Main) {
-                // 어댑터 연결
+                // 어댑터 연결 + deleteRecord 주입
                 rv_record.adapter = RecordAdapter(records) { record -> deleteRecord(record) }
             }
-//            //records가 채워 졌으니 adapter와  연결
-//            var recordAdapter = RecordAdapter(records)
-//            // 어댑터 연결
-//            rv_record.adapter = recordAdapter
-//            // 어댑터의 layoutmanager 연결
-//            rv_record.layoutManager = LinearLayoutManager(this@RecordActivity)
         }
 
         initRecyclerView()
@@ -86,9 +80,8 @@ class RecordActivity : AppCompatActivity(
 
     private fun initRecyclerView() {
         val rv_record = findViewById<RecyclerView>(R.id.rv_record)
-        //records가 채워 졌으니 adapter와  연결
+        //records가 채워 졌으니 adapter와 연결 + deleteRecord 주입
         var recordAdapter = RecordAdapter(records) { record -> deleteRecord(record) }
-//        var recordAdapter = RecordAdapter(records)
         // 어댑터 연결
         rv_record.adapter = recordAdapter
         // 어댑터의 layoutmanager 연결
