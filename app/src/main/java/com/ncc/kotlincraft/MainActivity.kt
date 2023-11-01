@@ -1,6 +1,7 @@
 package com.ncc.kotlincraft
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +18,8 @@ import kotlin.math.round
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
+
+     var db : RecordDatabase? =null
 
     //expression : 중위 표현식
     private var expression = ""
@@ -42,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        db = RecordDatabase.getInstance(this)
 
         val test = "test1"
         val test2 = "test2"
@@ -214,7 +218,27 @@ class MainActivity : AppCompatActivity() {
             saveExpression = expression
             postFix()
             result.text = expression
+            if (expression.toDouble().toInt() > 0){
+                when (val number = expression.toDouble().toInt() ) {
+                    in 0..10 -> {
+                        Log.d("0~10",number.toString())
+                        result.setBackgroundColor(Color.YELLOW)
+                    }
+                    in 11..100 -> {
+                        Log.d("11~100",number.toString())
+                        result.setBackgroundColor(Color.GREEN)
+                    }
+                    in 101..1000 -> {
+                        Log.d("101~1000",number.toString())
+                        result.setBackgroundColor(Color.RED)
+                    }
+                    else -> {
+                        Log.d("1001~",number.toString())
+                        result.setBackgroundColor(Color.BLUE)
+                    }
+                }
 
+            }
 
         }
     }
@@ -277,17 +301,19 @@ class MainActivity : AppCompatActivity() {
         while (stack.isNotEmpty()) {
             postFixStack.add(stack.pop())
         }
-        Log.d(postFixStack.toString(), "${stack.toString()}")
+        Log.d(postFixStack.toString(), "$stack")
         calculateStack()
     }
 
     private fun calculateStack() {
-        //RoomDb인스턴스 생성
-        val db = Room.databaseBuilder(
-            applicationContext,
-            RecordDatabase::class.java, "record"
-        ).build()
-
+//        var db: RecordDatabase? = null
+//        //RoomDb인스턴스 생성
+//        val db = Room.databaseBuilder(
+//            applicationContext,
+//            RecordDatabase::class.java, "record"
+//        ).build()
+//       db = RecordDatabase.getInstance(this)
+//        println("TEST TEST TEST DB1`:${db}")
         loop@ for (num in postFixStack) {
             if (num.isDigitsOnly() || num.contains(".")) {
                 resultStack.add(num.toDouble())
@@ -310,27 +336,25 @@ class MainActivity : AppCompatActivity() {
                 val secondNum = resultStack.pop()
                 val firstNum = resultStack.pop()
                 if ((round(secondNum * 1000) / 1000).roundToInt() == 0) {
-                    expression = "에러 : 분모가 0입니다."
+                    expression = ""
                     break@loop
                 }
                 val answer = firstNum / secondNum
                 resultStack.add(answer)
             }
-            Log.d("postFixStack", postFixStack.toString())
-            Log.d("resultStack", resultStack.toString())
+//            Log.d("postFixStack", postFixStack.toString())
+//            Log.d("resultStack", resultStack.toString())
         }
         if (expression != "에러 : 분모가 0입니다.") {
 //            //결과값 저장
 //            val recordDao = db.recordDao()
-
-
             expression = resultStack.pop().toString()
 
             // DB에 접근 할 대 메인 쓰레드를 쓰면 에러가 나기 때문에 Dispathcer.io로 백그라운드 스레드에서 작업
             CoroutineScope(Dispatchers.IO).launch {
                 saveExpression += "=$expression"
                 val record = Record(null, saveExpression)
-                db.recordDao().insertRecord(record)
+                db!!.recordDao().insertRecord(record)
             }
 
         }
