@@ -14,6 +14,7 @@ import androidx.room.RoomDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class RecordActivity : AppCompatActivity() {
 
@@ -31,27 +32,43 @@ class RecordActivity : AppCompatActivity() {
 
         val btnMainToRecord = findViewById<AppCompatButton>(R.id.btn_recordToMain)
         val rv_record = findViewById<RecyclerView>(R.id.rv_record)
-
-
         //RoomDb인스턴스 생성
         db = RecordDatabase.getInstance(this)
 
 
-//        println("TEST TEST TEST DB2`:${db}")
+        //메인 스레드와는 별개로 데이터를 받아오는 비동기 작업
         CoroutineScope(Dispatchers.IO).launch {
             val recordDao = db!!.recordDao()
             records = recordDao.getAll() as ArrayList<Record>
-            //records가 채워 졌으니 adapter와  연결
-            var recordAdapter = RecordAdapter(records)
-            // 어댑터 연결
-            rv_record.adapter = recordAdapter
-            // 어댑터의 layoutmanager 연결
-            rv_record.layoutManager = LinearLayoutManager(this@RecordActivity)
 
+            //백그라운드 스레드 작업이 끝났으니 main스레드 에서 UI 변경 작업 진행
+            withContext(Dispatchers.Main) {
+                // 어댑터 연결
+                rv_record.adapter = RecordAdapter(records)
+            }
+//            //records가 채워 졌으니 adapter와  연결
+//            var recordAdapter = RecordAdapter(records)
+//            // 어댑터 연결
+//            rv_record.adapter = recordAdapter
+//            // 어댑터의 layoutmanager 연결
+//            rv_record.layoutManager = LinearLayoutManager(this@RecordActivity)
         }
+
+        initRecyclerView()
         btnMainToRecord.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
     }
+
+    private fun initRecyclerView() {
+        val rv_record = findViewById<RecyclerView>(R.id.rv_record)
+        //records가 채워 졌으니 adapter와  연결
+        var recordAdapter = RecordAdapter(records)
+        // 어댑터 연결
+        rv_record.adapter = recordAdapter
+        // 어댑터의 layoutmanager 연결
+        rv_record.layoutManager = LinearLayoutManager(this@RecordActivity)
+    }
+
 }

@@ -21,7 +21,6 @@ class RecordAdapter(val itemList: List<Record>): RecyclerView.Adapter<RecordAdap
 
     override fun onBindViewHolder(holder: RecordAdapter.ViewHolder, position: Int) {
         holder.expression.text = itemList[position].expression
-
         // = 기준으로 결과 값 변경
         val result = itemList[position].expression!!.split("=").last()
         if (result.toDouble().toInt() > 0){
