@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "record")
 data class Record(
     @PrimaryKey(autoGenerate = true)
-    val id: Int?,
+    var id: Int?,
     @ColumnInfo(name = "expression") val expression : String?,
 
 )

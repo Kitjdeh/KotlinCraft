@@ -4,16 +4,26 @@ import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-class RecordAdapter(val itemList: List<Record>, private val clickListener: (Record) -> Unit) :
-    RecyclerView.Adapter<RecordAdapter.ViewHolder>() {
+class RecordAdapter(
+) :
+//interface DragDropListener를 Adapter에 넣은 후 override로 Adapter의 작용을 추가한다.
+    RecyclerView.Adapter<RecordAdapter.ViewHolder>(),DragDropListener{
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val expression = itemView.findViewById<TextView>(R.id.rv_item)
 
     }
+
+    private val Items = mutableListOf<Record>()
+
+    private lateinit var listener: LongClickListener
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordAdapter.ViewHolder {
         val view =
@@ -22,9 +32,10 @@ class RecordAdapter(val itemList: List<Record>, private val clickListener: (Reco
     }
 
     override fun onBindViewHolder(holder: RecordAdapter.ViewHolder, position: Int) {
-        holder.expression.text = itemList[position].expression
+        holder.expression.text = Items[position].expression
         // = 기준으로 결과 값 변경
-        val result = itemList[position].expression!!.split("=").last()
+        val result = Items[position].expression!!.split("=").last()
+
         if (result.toDouble().toInt() > 0) {
             when (val number = result.toDouble().toInt()) {
                 in 0..10 -> {
@@ -47,16 +58,38 @@ class RecordAdapter(val itemList: List<Record>, private val clickListener: (Reco
             }
         }
 
+
         //받아온 clickListner함수에 해당 itemList 주입
         holder.itemView.setOnLongClickListener {
-            clickListener(itemList[position])
+            listener.delete(Items[position])
+//            clickListener(itemList[position])
 //            Log.d("롱클릭",itemList[position].expression.toString())
             return@setOnLongClickListener true
         }
+
     }
 
     override fun getItemCount(): Int {
-        return itemList.count()
+
+        return Items.count()
+    }
+
+    //
+    fun addItems(records: List<Record>) {
+        this.Items.addAll(records)
+    }
+
+//    fun dragDropListener(listener: ItemTouchHelper.)
+    fun addListener(listener: LongClickListener) {
+        this.listener = listener
+    }
+
+    //ItemTouchHelper가 움직인 결과를 adapter에 적용한다.
+    override fun moveItem(start: Int, end: Int) {
+        Log.d("어댑터moveImte","${start},${end}")
+        notifyItemMoved(start,end)
+        listener.change(start,end)
+
     }
 
 }
