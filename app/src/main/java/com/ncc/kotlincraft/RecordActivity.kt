@@ -95,46 +95,18 @@ class RecordActivity : AppCompatActivity(
     // start~end가 아니라 한칸 씩 작동하게 설정
     private fun changeRecord(start: Int, end: Int) {
         CoroutineScope(Dispatchers.IO).launch {
+            Log.d("작동 전", "${records}")
             val recordDao = db!!.recordDao()
-//            val startRecord = Record(records[end].id, records[start].expression)
-//            val endRecord = Record(records[start].id, records[end].expression)
-            val tmp = records[start]
-            records[start].id = records[end].id
-            records[end].id = tmp.id
+            val startRecord = Record(records[end].id, records[start].expression)
+            val endRecord = Record(records[start].id, records[end].expression)
+//            val tmp = records[start]
+            records[start] = endRecord
+            records[end] = startRecord
             recordDao.updateRecord(records)
-            Log.d("chageRecord작동", "${records}")
-
+            Log.d("작동 후", "${records}")
 
         }
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val recordDao = db!!.recordDao()
-//            // start+1 부터 end 까지는 id를 -1 start는 end로
-//            if (start < end) {
-//                for (i in start+1..end){
-//                    val id = records[i].id!! - 1
-//                    val expression = records[i].expression
-//                    val record = Record(id,expression)
-//                    recordDao.updateRecord(record)
-//                }
-//                val id = records[end].id
-//                val expression = records[start].expression
-//                val record = Record(id,expression)
-//                recordDao.updateRecord(record)
-//
-//            } else if (start > end) {
-//                for (i in end..start){
-//                    val id = records[i].id!! + 1
-//                    val expression = records[i].expression
-//                    val record = Record(id,expression)
-//                    recordDao.updateRecord(record)
-//                }
-//                val id = records[end].id
-//                val expression = records[start].expression
-//                val record = Record(id,expression)
-//                recordDao.updateRecord(record)
-//            } else {
-//            }
-//        }
+
 
     }
 

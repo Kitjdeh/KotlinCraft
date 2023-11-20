@@ -86,7 +86,7 @@ class RecordAdapter(
 
     //ItemTouchHelper가 움직인 결과를 adapter에 적용한다.
     override fun moveItem(start: Int, end: Int) {
-        Log.d("어댑터moveImte","${start},${end}")
+//        Log.d("어댑터moveImte","${start},${end}")
         notifyItemMoved(start,end)
         listener.change(start,end)
 
