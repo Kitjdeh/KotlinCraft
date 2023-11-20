@@ -7,6 +7,7 @@ import android.view.View
 import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.isDigitsOnly
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
@@ -35,8 +36,8 @@ class RecordAdapter(
         holder.expression.text = Items[position].expression
         // = 기준으로 결과 값 변경
         val result = Items[position].expression!!.split("=").last()
-
-        if (result.toDouble().toInt() > 0) {
+        Log.d("${position}",Items[position].expression.toString())
+        if (result.isDigitsOnly()) {
             when (val number = result.toDouble().toInt()) {
                 in 0..10 -> {
                     holder.expression.setBackgroundColor(Color.YELLOW)

@@ -14,12 +14,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Stack
+import kotlin.math.exp
 import kotlin.math.round
 import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-     var db : RecordDatabase? =null
+    var db: RecordDatabase? = null
 
     //expression : 중위 표현식
     private var expression = ""
@@ -149,7 +150,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         deleteBtn.setOnClickListener {
-            var n = expression.length
+            val n = expression.length
             if (n > 0) {
                 expression = expression.substring(0, n - 1)
             }
@@ -166,51 +167,36 @@ class MainActivity : AppCompatActivity() {
         }
         plusBtn.setOnClickListener {
             expression += "+"
-//            if (num.isNotEmpty()) {
-//                listOrder.add(num)
-//            }
-//            listOrder.add("+")
+
             result.text = expression
             num = ""
         }
         minusBtn.setOnClickListener {
             expression += "-"
-//            if (num.isNotEmpty()) {
-//                listOrder.add(num)
-//            }
-//            listOrder.add("-")
+
             result.text = expression
             num = ""
         }
         multiplyBtn.setOnClickListener {
             expression += "*"
-//            if (num.isNotEmpty()) {
-//                listOrder.add(num)
-//            }
-//            listOrder.add("*")
+
             result.text = expression
             num = ""
         }
         divideBtn.setOnClickListener {
             expression += "/"
-//            if (num.isNotEmpty()) {
-//                listOrder.add(num)
-//            }
-//            listOrder.add("/")
+
+
             result.text = expression
             num = ""
         }
         leftParenthesis.setOnClickListener {
             expression += "("
-//            listOrder.add("(")
-//            result.text = expression
-//            num = ""
+
         }
         rightParenthesis.setOnClickListener {
             expression += ")"
-//            listOrder.add(num)
-//            listOrder.add(")")
-//            num = ""
+
             result.text = expression
         }
 
@@ -218,26 +204,33 @@ class MainActivity : AppCompatActivity() {
             saveExpression = expression
             postFix()
             result.text = expression
-            if (expression.toDouble().toInt() > 0){
-                when (val number = expression.toDouble().toInt() ) {
+            if (expression != "잘못된 수식 입니다." && expression != "에러 : 분모가 0입니다." )  {
+                when (val number = expression.toDouble().toInt()) {
+
                     in 0..10 -> {
-                        Log.d("0~10",number.toString())
+                        Log.d("0~10", number.toString())
                         result.setBackgroundColor(Color.YELLOW)
                     }
+
                     in 11..100 -> {
-                        Log.d("11~100",number.toString())
+                        Log.d("11~100", number.toString())
                         result.setBackgroundColor(Color.GREEN)
                     }
+
                     in 101..1000 -> {
-                        Log.d("101~1000",number.toString())
+                        Log.d("101~1000", number.toString())
                         result.setBackgroundColor(Color.RED)
                     }
+
                     else -> {
-                        Log.d("1001~",number.toString())
+                        Log.d("1001~", number.toString())
                         result.setBackgroundColor(Color.BLUE)
                     }
                 }
-
+            }
+            else{
+                expression = ""
+                result.text = expression
             }
 
         }
@@ -251,13 +244,12 @@ class MainActivity : AppCompatActivity() {
     private fun postFix() {
         // 2자리수 이상의 string 일경우 words에 포함시켜서 진행
         var words = ""
-        Log.d("expression", expression)
         for (char in expression) {
             val word = char.toString()
             if (word.isDigitsOnly() || word == ".") {
                 //.이 이미 있다면 break
                 if (words.contains(".") && word == ".") {
-                    Toast.makeText(this, "잘못된 수식입니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "잘못된 수식 입니다.", Toast.LENGTH_SHORT).show()
                     break
                 }
                 words += word
@@ -306,46 +298,54 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun calculateStack() {
-//        var db: RecordDatabase? = null
-//        //RoomDb인스턴스 생성
-//        val db = Room.databaseBuilder(
-//            applicationContext,
-//            RecordDatabase::class.java, "record"
-//        ).build()
-//       db = RecordDatabase.getInstance(this)
-//        println("TEST TEST TEST DB1`:${db}")
+
         loop@ for (num in postFixStack) {
             if (num.isDigitsOnly() || num.contains(".")) {
                 resultStack.add(num.toDouble())
-            } else if (num == "+") {
-                val secondNum = resultStack.pop()
-                val firstNum = resultStack.pop()
-                val answer = firstNum + secondNum
-                resultStack.add(answer)
-            } else if (num == "-") {
-                val secondNum = resultStack.pop()
-                val firstNum = resultStack.pop()
-                val answer = firstNum - secondNum
-                resultStack.add(answer)
-            } else if (num == "*") {
-                val secondNum = resultStack.pop()
-                val firstNum = resultStack.pop()
-                val answer = firstNum * secondNum
-                resultStack.add(answer)
-            } else if (num == "/") {
-                val secondNum = resultStack.pop()
-                val firstNum = resultStack.pop()
-                if ((round(secondNum * 1000) / 1000).roundToInt() == 0) {
-                    expression = ""
+            } else {
+                if (num.isDigitsOnly() || resultStack.size < 2){
+                    expression = "잘못된 수식 입니다."
+                    Toast.makeText(this, "잘못된 수식 입니다.", Toast.LENGTH_SHORT).show()
                     break@loop
                 }
-                val answer = firstNum / secondNum
-                resultStack.add(answer)
+                val secondNum = resultStack.pop()
+                val firstNum = resultStack.pop()
+
+                if (num == "+") {
+                    val answer = firstNum + secondNum
+                    resultStack.add(answer)
+                } else if (num == "-") {
+
+                    val answer = firstNum - secondNum
+                    resultStack.add(answer)
+                } else if (num == "*") {
+                    val answer = firstNum * secondNum
+                    resultStack.add(answer)
+                } else if (num == "/") {
+                    Log.d("세컨드",secondNum.toString())
+                    Log.d("세컨드",secondNum.equals(0.0).toString())
+                    if(secondNum.equals(0.0)){
+                        expression = "에러 : 분모가 0입니다."
+                        Toast.makeText(this, "에러 : 분모가 0입니다.", Toast.LENGTH_SHORT).show()
+                        break@loop
+                    }
+                    else{
+                        if ((round(secondNum * 1000) / 1000).roundToInt() == 0) {
+                            expression = ""
+                            break@loop
+                        }
+                        val answer = firstNum / secondNum
+                        resultStack.add(answer)
+                    }
+
+                }
+
             }
+
 //            Log.d("postFixStack", postFixStack.toString())
 //            Log.d("resultStack", resultStack.toString())
         }
-        if (expression != "에러 : 분모가 0입니다.") {
+        if (expression != "에러 : 분모가 0입니다." && expression != "잘못된 수식 입니다.") {
 //            //결과값 저장
 //            val recordDao = db.recordDao()
             expression = resultStack.pop().toString()
