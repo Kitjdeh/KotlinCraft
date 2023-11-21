@@ -97,12 +97,13 @@ class RecordActivity : AppCompatActivity(
         CoroutineScope(Dispatchers.IO).launch {
             Log.d("작동 전", "${records}")
             val recordDao = db!!.recordDao()
-            val startRecord = Record(records[end].id, records[start].expression)
-            val endRecord = Record(records[start].id, records[end].expression)
+            val startRecord = Record(records[start].id, records[end].expression)
+            val endRecord = Record(records[end].id, records[start].expression)
 //            val tmp = records[start]
-            records[start] = endRecord
-            records[end] = startRecord
-            recordDao.updateRecord(records)
+            records[start] = startRecord
+            records[end] = endRecord
+            recordDao.updateRecord(startRecord)
+            recordDao.updateRecord(endRecord)
             Log.d("작동 후", "${records}")
 
         }

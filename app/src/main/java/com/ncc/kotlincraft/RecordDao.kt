@@ -22,6 +22,6 @@ interface RecordDao {
     fun deleteAllRecords()
 
     @Update
-    fun updateRecord(records: List<Record>)
+    fun updateRecord(records: Record)
 //    fun updateRecord(vararg records: Record)
 }
