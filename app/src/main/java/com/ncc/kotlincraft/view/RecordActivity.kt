@@ -1,20 +1,22 @@
-package com.ncc.kotlincraft
+package com.ncc.kotlincraft.view
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import com.ncc.kotlincraft.adapter.callback.DragDropCallback
+import com.ncc.kotlincraft.listener.LongClickListener
+import com.ncc.kotlincraft.R
+import com.ncc.kotlincraft.db.entity.Record
+import com.ncc.kotlincraft.adapter.RecordAdapter
+import com.ncc.kotlincraft.db.RecordDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +33,6 @@ class RecordActivity : AppCompatActivity(
         override fun delete(record: Record) {
             deleteRecord(record)
         }
-
         override fun change(start: Int, end: Int) {
             changeRecord(start, end)
         }
@@ -95,20 +96,15 @@ class RecordActivity : AppCompatActivity(
     // start~end가 아니라 한칸 씩 작동하게 설정
     private fun changeRecord(start: Int, end: Int) {
         CoroutineScope(Dispatchers.IO).launch {
-            Log.d("작동 전", "${records}")
             val recordDao = db!!.recordDao()
             val startRecord = Record(records[start].id, records[end].expression)
             val endRecord = Record(records[end].id, records[start].expression)
-//            val tmp = records[start]
             records[start] = startRecord
             records[end] = endRecord
             recordDao.updateRecord(startRecord)
             recordDao.updateRecord(endRecord)
             Log.d("작동 후", "${records}")
-
         }
-
-
     }
 
 
@@ -121,7 +117,6 @@ class RecordActivity : AppCompatActivity(
         val dragDropCallback = DragDropCallback(recordAdapter)
         val itemTouchHelper = ItemTouchHelper(dragDropCallback)
         itemTouchHelper.attachToRecyclerView(rv_record)
-
     }
 
 }

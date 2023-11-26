@@ -1,8 +1,8 @@
-package com.ncc.kotlincraft
+package com.ncc.kotlincraft.adapter.callback
 
-import android.util.Log
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.ncc.kotlincraft.listener.DragDropListener
 
 class DragDropCallback(private val listener: DragDropListener):ItemTouchHelper.Callback() {
 
@@ -11,9 +11,7 @@ class DragDropCallback(private val listener: DragDropListener):ItemTouchHelper.C
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
-
         val flag = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-
         return makeMovementFlags(flag,0)
     }
 

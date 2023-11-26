@@ -1,15 +1,15 @@
-package com.ncc.kotlincraft
+package com.ncc.kotlincraft.adapter
 
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.text.isDigitsOnly
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.ncc.kotlincraft.listener.DragDropListener
+import com.ncc.kotlincraft.listener.LongClickListener
+import com.ncc.kotlincraft.R
+import com.ncc.kotlincraft.db.entity.Record
 
 class RecordAdapter(
 ) :
@@ -17,36 +17,30 @@ class RecordAdapter(
     RecyclerView.Adapter<RecordAdapter.ViewHolder>(), DragDropListener {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val expression = itemView.findViewById<TextView>(R.id.rv_item)
-
     }
 
     private val Items = mutableListOf<Record>()
 
     private lateinit var listener: LongClickListener
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecordAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.record_rv_item, parent, false)
         return ViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: RecordAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.expression.text = Items[position].expression
         // = 기준으로 결과 값 변경
         val result = Items[position].expression!!.split("=").last()
-
 //        if (result.isDigitsOnly()) {
         when (val number = result.toDouble().toInt()) {
             in 0..10 -> {
                 holder.expression.setBackgroundColor(Color.YELLOW)
             }
-
             in 11..100 -> {
-
                 holder.expression.setBackgroundColor(Color.GREEN)
             }
-
             in 101..1000 -> {
                 holder.expression.setBackgroundColor(Color.RED)
             }
@@ -57,15 +51,11 @@ class RecordAdapter(
         }
 //        }
 
-
         //받아온 clickListner함수에 해당 itemList 주입
         holder.itemView.setOnLongClickListener {
             listener.delete(Items[position])
-//            clickListener(itemList[position])
-//            Log.d("롱클릭",itemList[position].expression.toString())
             return@setOnLongClickListener true
         }
-
     }
 
     override fun getItemCount(): Int {
