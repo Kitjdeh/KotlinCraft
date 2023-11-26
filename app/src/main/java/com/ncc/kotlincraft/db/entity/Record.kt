@@ -1,4 +1,4 @@
-package com.ncc.kotlincraft
+package com.ncc.kotlincraft.db.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
@@ -8,6 +8,6 @@ import androidx.room.PrimaryKey
 data class Record(
     @PrimaryKey(autoGenerate = true)
     val id: Int?,
-    @ColumnInfo(name = "expression") val expression : String?,
-
+    // id는 유지 하고 내용을 바꾸는 방향으로 수정
+    @ColumnInfo(name = "expression") var expression : String?,
 )
