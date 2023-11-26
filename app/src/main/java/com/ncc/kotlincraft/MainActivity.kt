@@ -1,4 +1,4 @@
-package com.ncc.kotlincraft.view
+package com.ncc.kotlincraft
 
 import android.content.Intent
 import android.graphics.Color
@@ -9,9 +9,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.text.isDigitsOnly
-import com.ncc.kotlincraft.R
-import com.ncc.kotlincraft.db.entity.Record
-import com.ncc.kotlincraft.db.RecordDatabase
+import androidx.room.Room
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +19,7 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-    private var db: RecordDatabase? = null
+     var db : RecordDatabase? =null
 
     //expression : 중위 표현식
     private var expression = ""
@@ -39,7 +37,9 @@ class MainActivity : AppCompatActivity() {
 
     var totalNumber = ""
     val stack = Stack<String>()
+    var num = ""
     val value = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +47,9 @@ class MainActivity : AppCompatActivity() {
 
         db = RecordDatabase.getInstance(this)
 
+        val test = "test1"
+        val test2 = "test2"
+        val test3 = "test3"
 
         val oneBtn = findViewById<TextView>(R.id.oneBtn)
         val twoBtn = findViewById<TextView>(R.id.twoBtn)
@@ -78,48 +81,67 @@ class MainActivity : AppCompatActivity() {
         }
         oneBtn.setOnClickListener {
             expression += "1"
+            num += "1"
             result.text = expression
         }
         twoBtn.setOnClickListener {
             expression += "2"
+            num += "2"
             result.text = expression
         }
         threeBtn.setOnClickListener {
             expression += "3"
+            num += "3"
             result.text = expression
         }
         fourBtn.setOnClickListener {
             expression += "4"
+            num += "4"
             result.text = expression
         }
         fiveBtn.setOnClickListener {
             expression += "5"
+            num += "5"
             result.text = expression
         }
         sixBtn.setOnClickListener {
             expression += "6"
+            num += "6"
             result.text = expression
         }
         sevenBtn.setOnClickListener {
             expression += "7"
+            num += "7"
             result.text = expression
         }
         eightBtn.setOnClickListener {
             expression += "8"
+            num += "8"
             result.text = expression
         }
         nineBtn.setOnClickListener {
             expression += "9"
+            num += "9"
             result.text = expression
         }
         zeroBtn.setOnClickListener {
             expression += "0"
+            num += "0"
             result.text = expression
         }
         pointBtn.setOnClickListener {
+            Log.d(expression.last().toString(), expression.last().isDigit().toString())
+            Log.d(
+                expression.last().toString(),
+                expression.last().toString().isDigitsOnly().toString()
+            )
             if (!expression.last().toString().isDigitsOnly()) {
-                expression != getString(R.string.value_error)
-                Toast.makeText(this, getString(R.string.value_error), Toast.LENGTH_SHORT).show()
+                Log.d(expression.last().toString(), expression.last().isDigit().toString())
+                Log.d(
+                    expression.last().toString(),
+                    expression.last().toString().isDigitsOnly().toString()
+                )
+                Toast.makeText(this, "잘못된 수식입니다.", Toast.LENGTH_SHORT).show()
             } else {
                 expression += "."
                 result.text = expression
@@ -127,7 +149,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         deleteBtn.setOnClickListener {
-            val n = expression.length
+            var n = expression.length
             if (n > 0) {
                 expression = expression.substring(0, n - 1)
             }
@@ -136,6 +158,7 @@ class MainActivity : AppCompatActivity() {
         }
         clearBtn.setOnClickListener {
             expression = ""
+            num = ""
             result.text = expression
             listOrder.clear()
             resultStack.clear()
@@ -143,72 +166,98 @@ class MainActivity : AppCompatActivity() {
         }
         plusBtn.setOnClickListener {
             expression += "+"
+//            if (num.isNotEmpty()) {
+//                listOrder.add(num)
+//            }
+//            listOrder.add("+")
             result.text = expression
+            num = ""
         }
         minusBtn.setOnClickListener {
             expression += "-"
+//            if (num.isNotEmpty()) {
+//                listOrder.add(num)
+//            }
+//            listOrder.add("-")
             result.text = expression
+            num = ""
         }
         multiplyBtn.setOnClickListener {
             expression += "*"
+//            if (num.isNotEmpty()) {
+//                listOrder.add(num)
+//            }
+//            listOrder.add("*")
             result.text = expression
+            num = ""
         }
         divideBtn.setOnClickListener {
             expression += "/"
+//            if (num.isNotEmpty()) {
+//                listOrder.add(num)
+//            }
+//            listOrder.add("/")
             result.text = expression
+            num = ""
         }
         leftParenthesis.setOnClickListener {
             expression += "("
+//            listOrder.add("(")
+//            result.text = expression
+//            num = ""
         }
         rightParenthesis.setOnClickListener {
             expression += ")"
+//            listOrder.add(num)
+//            listOrder.add(")")
+//            num = ""
             result.text = expression
         }
+
         calculatorBtn.setOnClickListener {
             saveExpression = expression
             postFix()
             result.text = expression
-            if (expression != getString(R.string.value_error) && expression != getString(R.string.value_zero)) {
-                when (val number = expression.toDouble().toInt()) {
+            if (expression.toDouble().toInt() > 0){
+                when (val number = expression.toDouble().toInt() ) {
                     in 0..10 -> {
+                        Log.d("0~10",number.toString())
                         result.setBackgroundColor(Color.YELLOW)
                     }
                     in 11..100 -> {
+                        Log.d("11~100",number.toString())
                         result.setBackgroundColor(Color.GREEN)
                     }
-
                     in 101..1000 -> {
+                        Log.d("101~1000",number.toString())
                         result.setBackgroundColor(Color.RED)
                     }
-
                     else -> {
+                        Log.d("1001~",number.toString())
                         result.setBackgroundColor(Color.BLUE)
                     }
                 }
-            } else {
-                expression = ""
-                result.text = expression
+
             }
 
         }
     }
 
     private fun getResult() {
-        Log.d("getResult", "현재 스레드: ${Thread.currentThread().name}")
+
     }
 
     //중위 표현식 expression을 후위표현식으로 변환
     private fun postFix() {
         // 2자리수 이상의 string 일경우 words에 포함시켜서 진행
         var words = ""
+        Log.d("expression", expression)
         for (char in expression) {
             val word = char.toString()
             if (word.isDigitsOnly() || word == ".") {
                 //.이 이미 있다면 break
                 if (words.contains(".") && word == ".") {
-                    expression = getString(R.string.value_error)
-//                    Log.d("postFi 244",expression)
-                    Toast.makeText(this, expression, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "잘못된 수식입니다.", Toast.LENGTH_SHORT).show()
                     break
                 }
                 words += word
@@ -252,57 +301,62 @@ class MainActivity : AppCompatActivity() {
         while (stack.isNotEmpty()) {
             postFixStack.add(stack.pop())
         }
+        Log.d(postFixStack.toString(), "$stack")
         calculateStack()
     }
 
     private fun calculateStack() {
+//        var db: RecordDatabase? = null
+//        //RoomDb인스턴스 생성
+//        val db = Room.databaseBuilder(
+//            applicationContext,
+//            RecordDatabase::class.java, "record"
+//        ).build()
+//       db = RecordDatabase.getInstance(this)
+//        println("TEST TEST TEST DB1`:${db}")
         loop@ for (num in postFixStack) {
             if (num.isDigitsOnly() || num.contains(".")) {
                 resultStack.add(num.toDouble())
-            } else {
-                if (num.isDigitsOnly() || resultStack.size < 2) {
-                    expression = getString(R.string.value_error)
-//                    Log.d("calculateStack 301",expression)
-                    Toast.makeText(this, expression, Toast.LENGTH_SHORT).show()
-                    break@loop
-                }
+            } else if (num == "+") {
                 val secondNum = resultStack.pop()
                 val firstNum = resultStack.pop()
-                if (num == "+") {
-                    val answer = firstNum + secondNum
-                    resultStack.add(answer)
-                } else if (num == "-") {
-                    val answer = firstNum - secondNum
-                    resultStack.add(answer)
-                } else if (num == "*") {
-                    val answer = firstNum * secondNum
-                    resultStack.add(answer)
-                } else if (num == "/") {
-                    if (secondNum.equals(0.0)) {
-                        expression = getString(R.string.value_zero)
-                        Toast.makeText(this, expression, Toast.LENGTH_SHORT).show()
-                        break@loop
-                    } else {
-                        if ((round(secondNum * 1000) / 1000).roundToInt() == 0) {
-                            expression = ""
-                            break@loop
-                        }
-                        val answer = firstNum / secondNum
-                        resultStack.add(answer)
-                    }
+                val answer = firstNum + secondNum
+                resultStack.add(answer)
+            } else if (num == "-") {
+                val secondNum = resultStack.pop()
+                val firstNum = resultStack.pop()
+                val answer = firstNum - secondNum
+                resultStack.add(answer)
+            } else if (num == "*") {
+                val secondNum = resultStack.pop()
+                val firstNum = resultStack.pop()
+                val answer = firstNum * secondNum
+                resultStack.add(answer)
+            } else if (num == "/") {
+                val secondNum = resultStack.pop()
+                val firstNum = resultStack.pop()
+                if ((round(secondNum * 1000) / 1000).roundToInt() == 0) {
+                    expression = ""
+                    break@loop
                 }
+                val answer = firstNum / secondNum
+                resultStack.add(answer)
             }
+//            Log.d("postFixStack", postFixStack.toString())
+//            Log.d("resultStack", resultStack.toString())
         }
-        if (expression != getString(R.string.value_error) && expression != getString(R.string.value_zero)) {
+        if (expression != "에러 : 분모가 0입니다.") {
 //            //결과값 저장
 //            val recordDao = db.recordDao()
             expression = resultStack.pop().toString()
+
             // DB에 접근 할 대 메인 쓰레드를 쓰면 에러가 나기 때문에 Dispathcer.io로 백그라운드 스레드에서 작업
             CoroutineScope(Dispatchers.IO).launch {
                 saveExpression += "=$expression"
                 val record = Record(null, saveExpression)
                 db!!.recordDao().insertRecord(record)
             }
+
         }
     }
 }
