@@ -11,12 +11,12 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ncc.kotlincraft.adapter.callback.DragDropCallback
-import com.ncc.kotlincraft.listener.LongClickListener
+import com.ncc.kotlincraft.view.util.adapter.callback.DragDropCallback
+import com.ncc.kotlincraft.view.listener.LongClickListener
 import com.ncc.kotlincraft.R
-import com.ncc.kotlincraft.db.entity.Record
-import com.ncc.kotlincraft.adapter.RecordAdapter
-import com.ncc.kotlincraft.db.RecordDatabase
+import com.ncc.kotlincraft.data.db.entity.Record
+import com.ncc.kotlincraft.view.util.adapter.RecordAdapter
+import com.ncc.kotlincraft.data.db.RecordDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

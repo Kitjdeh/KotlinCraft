@@ -1,11 +1,11 @@
-package com.ncc.kotlincraft.db
+package com.ncc.kotlincraft.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.ncc.kotlincraft.db.entity.Record
-import com.ncc.kotlincraft.db.dao.RecordDao
+import com.ncc.kotlincraft.data.db.entity.Record
+import com.ncc.kotlincraft.data.db.dao.RecordDao
 
 
 @Database(entities = [Record::class], version = 1)

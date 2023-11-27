@@ -10,8 +10,8 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.text.isDigitsOnly
 import com.ncc.kotlincraft.R
-import com.ncc.kotlincraft.db.entity.Record
-import com.ncc.kotlincraft.db.RecordDatabase
+import com.ncc.kotlincraft.data.db.entity.Record
+import com.ncc.kotlincraft.data.db.RecordDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
