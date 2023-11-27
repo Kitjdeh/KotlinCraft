@@ -37,7 +37,6 @@ class MainActivity : AppCompatActivity() {
 
     private val listOrder = mutableListOf<String>()
 
-    var totalNumber = ""
     val stack = Stack<String>()
     val value = 0
 
