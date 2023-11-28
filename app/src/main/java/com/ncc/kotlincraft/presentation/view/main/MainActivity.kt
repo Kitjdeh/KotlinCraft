@@ -1,4 +1,4 @@
-package com.ncc.kotlincraft.view
+package com.ncc.kotlincraft.presentation.view.main
 
 import android.content.Intent
 import android.graphics.Color
@@ -10,8 +10,9 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.text.isDigitsOnly
 import com.ncc.kotlincraft.R
-import com.ncc.kotlincraft.db.entity.Record
-import com.ncc.kotlincraft.db.RecordDatabase
+import com.ncc.kotlincraft.data.db.entity.Record
+import com.ncc.kotlincraft.data.db.RecordDatabase
+import com.ncc.kotlincraft.presentation.view.record.RecordActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,7 +38,6 @@ class MainActivity : AppCompatActivity() {
 
     private val listOrder = mutableListOf<String>()
 
-    var totalNumber = ""
     val stack = Stack<String>()
     val value = 0
 

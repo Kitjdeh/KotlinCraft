@@ -1,4 +1,4 @@
-package com.ncc.kotlincraft.view
+package com.ncc.kotlincraft.presentation.view.record
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -11,12 +11,13 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.ncc.kotlincraft.adapter.callback.DragDropCallback
-import com.ncc.kotlincraft.listener.LongClickListener
+import com.ncc.kotlincraft.presentation.view.record.adapter.callback.DragDropCallback
+import com.ncc.kotlincraft.presentation.view.listener.LongClickListener
 import com.ncc.kotlincraft.R
-import com.ncc.kotlincraft.db.entity.Record
-import com.ncc.kotlincraft.adapter.RecordAdapter
-import com.ncc.kotlincraft.db.RecordDatabase
+import com.ncc.kotlincraft.data.db.entity.Record
+import com.ncc.kotlincraft.data.db.RecordDatabase
+import com.ncc.kotlincraft.presentation.view.main.MainActivity
+import com.ncc.kotlincraft.presentation.view.record.adapter.RecordAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
