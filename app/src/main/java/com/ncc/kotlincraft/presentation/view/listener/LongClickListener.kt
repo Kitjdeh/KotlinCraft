@@ -1,4 +1,4 @@
-package com.ncc.kotlincraft.presentation.listener
+package com.ncc.kotlincraft.presentation.view.listener
 
 import com.ncc.kotlincraft.data.db.entity.Record
 
