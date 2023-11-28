@@ -1,4 +1,4 @@
-package com.ncc.kotlincraft.view.listener
+package com.ncc.kotlincraft.presentation.listener
 
 interface DragDropListener {
     fun moveItem(start:Int,end:Int)

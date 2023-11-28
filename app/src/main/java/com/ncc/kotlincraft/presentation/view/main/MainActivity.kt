@@ -1,4 +1,4 @@
-package com.ncc.kotlincraft.view
+package com.ncc.kotlincraft.presentation.view.main
 
 import android.content.Intent
 import android.graphics.Color
@@ -12,6 +12,7 @@ import androidx.core.text.isDigitsOnly
 import com.ncc.kotlincraft.R
 import com.ncc.kotlincraft.data.db.entity.Record
 import com.ncc.kotlincraft.data.db.RecordDatabase
+import com.ncc.kotlincraft.presentation.view.main.record.RecordActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

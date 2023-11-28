@@ -1,4 +1,4 @@
-package com.ncc.kotlincraft.view.util.adapter
+package com.ncc.kotlincraft.presentation.view.main.record.adapter
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -6,8 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.ncc.kotlincraft.view.listener.DragDropListener
-import com.ncc.kotlincraft.view.listener.LongClickListener
+import com.ncc.kotlincraft.presentation.listener.DragDropListener
+import com.ncc.kotlincraft.presentation.listener.LongClickListener
 import com.ncc.kotlincraft.R
 import com.ncc.kotlincraft.data.db.entity.Record
 
