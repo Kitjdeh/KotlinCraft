@@ -16,6 +16,8 @@ import com.ncc.kotlincraft.presentation.view.listener.LongClickListener
 import com.ncc.kotlincraft.R
 import com.ncc.kotlincraft.data.db.entity.Record
 import com.ncc.kotlincraft.data.db.RecordDatabase
+import com.ncc.kotlincraft.databinding.ActivityMainBinding
+import com.ncc.kotlincraft.databinding.ActivityRecordBinding
 import com.ncc.kotlincraft.presentation.view.main.MainActivity
 import com.ncc.kotlincraft.presentation.view.record.adapter.RecordAdapter
 import kotlinx.coroutines.CoroutineScope
@@ -40,15 +42,17 @@ class RecordActivity : AppCompatActivity(
     }
 
     private val recordAdapter = RecordAdapter()
-
+    private lateinit var binding: ActivityRecordBinding
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_record)
+        binding = ActivityRecordBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        val btnMainToRecord = findViewById<AppCompatButton>(R.id.btn_recordToMain)
-        rv_record = findViewById<RecyclerView>(R.id.rv_record)
-
+//        val btnMainToRecord = findViewById<AppCompatButton>(R.id.btn_recordToMain)
+//        rv_record = findViewById<RecyclerView>(R.id.rv_record)
+        rv_record = binding.rvRecord
         initRecyclerView()
         //RoomDb인스턴스 생성
         db = RecordDatabase.getInstance(this)
@@ -63,7 +67,7 @@ class RecordActivity : AppCompatActivity(
             }
         }
 
-        btnMainToRecord.setOnClickListener {
+        binding.btnRecordToMain.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
