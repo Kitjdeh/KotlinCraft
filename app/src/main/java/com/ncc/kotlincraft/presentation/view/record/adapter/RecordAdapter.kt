@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ncc.kotlincraft.listener.DragDropListener
 import com.ncc.kotlincraft.listener.LongClickListener
 import com.ncc.kotlincraft.R
-import com.ncc.kotlincraft.db.entity.Record
+import com.ncc.kotlincraft.data.db.entity.Record
 
 class RecordAdapter(
 ) :
