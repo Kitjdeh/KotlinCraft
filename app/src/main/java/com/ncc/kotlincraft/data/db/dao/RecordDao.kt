@@ -1,11 +1,11 @@
-package com.ncc.kotlincraft.db.dao
+package com.ncc.kotlincraft.data.db.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.ncc.kotlincraft.db.entity.Record
+import com.ncc.kotlincraft.data.db.entity.Record
 
 @Dao
 interface RecordDao {
