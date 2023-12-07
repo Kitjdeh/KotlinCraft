@@ -1,4 +1,4 @@
-package com.ncc.kotlincraft.view
+package com.ncc.kotlincraft.presentation.view.main
 
 import android.content.Intent
 import android.graphics.Color
@@ -10,8 +10,9 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.text.isDigitsOnly
 import com.ncc.kotlincraft.R
-import com.ncc.kotlincraft.db.entity.Record
-import com.ncc.kotlincraft.db.RecordDatabase
+import com.ncc.kotlincraft.data.entity.Record
+import com.ncc.kotlincraft.data.db.RecordDatabase
+import com.ncc.kotlincraft.presentation.view.record.RecordActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -297,9 +298,10 @@ class MainActivity : AppCompatActivity() {
 //            //결과값 저장
 //            val recordDao = db.recordDao()
             expression = resultStack.pop().toString()
+            saveExpression += "=$expression"
+
             // DB에 접근 할 대 메인 쓰레드를 쓰면 에러가 나기 때문에 Dispathcer.io로 백그라운드 스레드에서 작업
             CoroutineScope(Dispatchers.IO).launch {
-                saveExpression += "=$expression"
                 val record = Record(null, saveExpression)
                 db!!.recordDao().insertRecord(record)
             }

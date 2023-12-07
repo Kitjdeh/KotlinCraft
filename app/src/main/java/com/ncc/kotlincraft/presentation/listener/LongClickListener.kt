@@ -1,6 +1,6 @@
-package com.ncc.kotlincraft.listener
+package com.ncc.kotlincraft.presentation.listener
 
-import com.ncc.kotlincraft.db.entity.Record
+import com.ncc.kotlincraft.data.entity.Record
 
 interface LongClickListener {
     fun delete(record: Record)
