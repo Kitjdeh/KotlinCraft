@@ -1,5 +1,4 @@
 # KotlinCraft
-# KotlinCraft
 
 ## 앱 소개
 
@@ -13,7 +12,8 @@ KotlinCraft : Kotlin을 기본기부터 차근차근 복습하기 위한 Craft(�
 
 ## Structure
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/d5e30a5b-7cae-462a-8f51-4993236d0f1a/b009ed3e-8ab2-4b81-82de-d5e0ba29d02d/Untitled.png)
+https://file.notion.so/f/f/d5e30a5b-7cae-462a-8f51-4993236d0f1a/b009ed3e-8ab2-4b81-82de-d5e0ba29d02d/Untitled.png?id=33546b4d-e8f8-4be7-8bd4-7afc5008fded&table=block&spaceId=d5e30a5b-7cae-462a-8f51-4993236d0f1a&expirationTimestamp=1702303200000&signature=dgNo_FwCRtnyASVyPvPswiGJ9UQutSFC31w6uekZoc4&downloadName=Untitled.png
+
 
 ## 사용기술
 
@@ -37,9 +37,10 @@ KotlinCraft : Kotlin을 기본기부터 차근차근 복습하기 위한 Craft(�
 
 ## 화면
 
-![write.gif](https://prod-files-secure.s3.us-west-2.amazonaws.com/d5e30a5b-7cae-462a-8f51-4993236d0f1a/f505d9ec-6e5b-4af7-be41-1426eae70e10/write.gif)
+https://file.notion.so/f/f/d5e30a5b-7cae-462a-8f51-4993236d0f1a/f505d9ec-6e5b-4af7-be41-1426eae70e10/write.gif?id=2da5cc26-be41-4086-9384-a6d26d3b304e&table=block&spaceId=d5e30a5b-7cae-462a-8f51-4993236d0f1a&expirationTimestamp=1702303200000&signature=_fb7vHx0ZW7FVxZdZjGSPWDZ3Z5TwT1WKmg1OUK0ses&downloadName=write.gif
 
-![shortmove.gif](https://prod-files-secure.s3.us-west-2.amazonaws.com/d5e30a5b-7cae-462a-8f51-4993236d0f1a/26721d51-79f3-4dd5-9e9e-d527d92cdae8/shortmove.gif)
+![image](https://github.com/Kitjdeh/KotlinCraft/assets/109275661/1334daa7-bc61-4cb5-b3cc-cef0547baccb)
+
 
 ## 핵심 로직
 
@@ -49,7 +50,8 @@ KotlinCraft : Kotlin을 기본기부터 차근차근 복습하기 위한 Craft(�
 
 이러한 점을 토대로 계산기에 입력한 중위 연산자를 후위 연산자로 바꾸는 postFix(), 변경 된 후위연산자를 계산하는 calculateStack()으로 나누어 진행한다.
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/d5e30a5b-7cae-462a-8f51-4993236d0f1a/07900df4-54fa-46d2-a804-c04e31669151/Untitled.png)
+![image](https://github.com/Kitjdeh/KotlinCraft/assets/109275661/e7d35be4-1689-4736-9a40-11da994e73a8)
+
 
 - **후위 연산자로 변경 (postFix())**
 
