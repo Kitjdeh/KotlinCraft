@@ -10,6 +10,8 @@ Github 링크:https://github.com/Kitjdeh/KotlinCraft
 
 KotlinCraft : Kotlin을 기본기부터 차근차근 복습하기 위한 Craft(공예품을 만들다)작업
 
+1차 회고록: https://low-mask-6a9.notion.site/kotlin-KotlinCraft-1-431672cc7e3c45f5858ac483f469cb8f?pvs=4
+
 ## Structure
 
 ![image](https://github.com/Kitjdeh/KotlinCraft/assets/109275661/173b1f66-46fe-4087-bd27-ea8fb9987f25)
@@ -129,7 +131,8 @@ KotlinCraft : Kotlin을 기본기부터 차근차근 복습하기 위한 Craft(�
     
 - **후위 연산자 계산**
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/d5e30a5b-7cae-462a-8f51-4993236d0f1a/03304de2-0f6c-49cc-a277-d76ae8eac0cc/Untitled.png)
+![image](https://github.com/Kitjdeh/KotlinCraft/assets/109275661/2cdacefe-2db2-4f75-aedb-1ec05239a121)
+
 
 1. 숫자는 스택(resultStack)에 담는다.
 2. 연산자를 만나면 스택에서 연산자 2개를 꺼내서 연산하고 다시 넣는다.
@@ -199,7 +202,8 @@ KotlinCraft : Kotlin을 기본기부터 차근차근 복습하기 위한 Craft(�
 
 Adpater에서 리스트 뷰에 롱클릭 시 Record를 삭제하는 함수
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/d5e30a5b-7cae-462a-8f51-4993236d0f1a/07667739-8c54-4c8f-a9da-8f061fe15ff5/Untitled.png)
+![image](https://github.com/Kitjdeh/KotlinCraft/assets/109275661/dbe00869-c721-451d-a575-3bf575617b12)
+
 
 - 메인 스레드(UI작업)에 필요한 백그라운드 스레드 작업을 RecordActivity에서 선언
 
@@ -243,7 +247,8 @@ fun addListener(listener: LongClickListener) {
 
 - Adapter에서 콜백 리스너 작동
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/d5e30a5b-7cae-462a-8f51-4993236d0f1a/38b35c48-f33c-4c47-9fba-bd1c24bbc552/Untitled.png)
+![image](https://github.com/Kitjdeh/KotlinCraft/assets/109275661/25434c9f-d737-4a86-92cf-c78cf31f46f4)
+
 
 ```kotlin
 class RecordAdapter(
