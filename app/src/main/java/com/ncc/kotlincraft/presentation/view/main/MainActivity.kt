@@ -39,6 +39,14 @@ class MainActivity : AppCompatActivity() {
     val value = 0
 
     private val viewModel: MainViewModel by viewModels()
+    private fun showToastMessage(message: String) {
+        Toast.makeText(
+            this,
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -86,18 +94,14 @@ class MainActivity : AppCompatActivity() {
         }
         //수식에 문제가 있을 경우 알려주는 warning observe
         viewModel.warning.observe(this) { warning ->
+            var message = ""
             when (warning) {
-                "value_error" -> Toast.makeText(
-                    this,
-                    getString(R.string.value_error),
-                    Toast.LENGTH_SHORT
-                ).show()
-                "value_zero" -> Toast.makeText(
-                    this,
-                    getString(R.string.value_zero),
-                    Toast.LENGTH_SHORT
-                ).show()
+                "value_error" ->
+                    message = getString(R.string.value_error)
+                "value_zero" ->
+                    message = getString(R.string.value_error)
             }
+            showToastMessage(message)
         }
         recordBtn.setOnClickListener {
             val intent = Intent(this, RecordActivity::class.java)
