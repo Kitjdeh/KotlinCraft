@@ -10,8 +10,9 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.text.isDigitsOnly
 import com.ncc.kotlincraft.R
-import com.ncc.kotlincraft.db.entity.Record
-import com.ncc.kotlincraft.db.RecordDatabase
+import com.ncc.kotlincraft.databinding.ActivityMainBinding
+import com.ncc.kotlincraft.data.db.entity.Record
+import com.ncc.kotlincraft.data.db.RecordDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,154 +41,155 @@ class MainActivity : AppCompatActivity() {
     var totalNumber = ""
     val stack = Stack<String>()
     val value = 0
-
+    private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+//        setContentView(R.layout.activity_main)
 
+        binding = ActivityMainBinding.inflate(layoutInflater)
         db = RecordDatabase.getInstance(this)
+        setContentView(binding.root)
+
+//        val oneBtn = findViewById<TextView>(R.id.oneBtn)
+//        val twoBtn = findViewById<TextView>(R.id.twoBtn)
+//        val threeBtn = findViewById<TextView>(R.id.threeBtn)
+//        val fourBtn = findViewById<TextView>(R.id.fourBtn)
+//        val fiveBtn = findViewById<TextView>(R.id.fiveBtn)
+//        val sixBtn = findViewById<TextView>(R.id.sixBtn)
+//        val sevenBtn = findViewById<TextView>(R.id.sevenBtn)
+//        val eightBtn = findViewById<TextView>(R.id.eightBtn)
+//        val nineBtn = findViewById<TextView>(R.id.nineBtn)
+//        val zeroBtn = findViewById<TextView>(R.id.zeroBtn)
+//        val plusBtn = findViewById<TextView>(R.id.plusBtn)
+//        val minusBtn = findViewById<TextView>(R.id.minusBtn)
+//        val multiplyBtn = findViewById<TextView>(R.id.multiplyBtn)
+//        val divideBtn = findViewById<TextView>(R.id.divideBtn)
+//        val clearBtn = findViewById<TextView>(R.id.clearBtn)
+//        val deleteBtn = findViewById<TextView>(R.id.deletBtn)
+//        val calculatorBtn = findViewById<TextView>(R.id.equalBtn)
+//        val leftParenthesis = findViewById<TextView>(R.id.left_parenthesis)
+//        val rightParenthesis = findViewById<TextView>(R.id.right_parenthesis)
+//        val result = findViewById<TextView>(R.id.result)
+//        val pointBtn = findViewById<TextView>(R.id.pointBtn)
+//        val recordBtn = findViewById<AppCompatButton>(R.id.btn_mainToRecord)
 
 
-        val oneBtn = findViewById<TextView>(R.id.oneBtn)
-        val twoBtn = findViewById<TextView>(R.id.twoBtn)
-        val threeBtn = findViewById<TextView>(R.id.threeBtn)
-        val fourBtn = findViewById<TextView>(R.id.fourBtn)
-        val fiveBtn = findViewById<TextView>(R.id.fiveBtn)
-        val sixBtn = findViewById<TextView>(R.id.sixBtn)
-        val sevenBtn = findViewById<TextView>(R.id.sevenBtn)
-        val eightBtn = findViewById<TextView>(R.id.eightBtn)
-        val nineBtn = findViewById<TextView>(R.id.nineBtn)
-        val zeroBtn = findViewById<TextView>(R.id.zeroBtn)
-        val plusBtn = findViewById<TextView>(R.id.plusBtn)
-        val minusBtn = findViewById<TextView>(R.id.minusBtn)
-        val multiplyBtn = findViewById<TextView>(R.id.multiplyBtn)
-        val divideBtn = findViewById<TextView>(R.id.divideBtn)
-        val clearBtn = findViewById<TextView>(R.id.clearBtn)
-        val deleteBtn = findViewById<TextView>(R.id.deletBtn)
-        val calculatorBtn = findViewById<TextView>(R.id.equalBtn)
-        val leftParenthesis = findViewById<TextView>(R.id.left_parenthesis)
-        val rightParenthesis = findViewById<TextView>(R.id.right_parenthesis)
-        val result = findViewById<TextView>(R.id.result)
-        val pointBtn = findViewById<TextView>(R.id.pointBtn)
-        val recordBtn = findViewById<AppCompatButton>(R.id.btn_mainToRecord)
-
-
-        recordBtn.setOnClickListener {
+        binding.btnMainToRecord.setOnClickListener {
             val intent = Intent(this, RecordActivity::class.java)
             startActivity(intent)
         }
-        oneBtn.setOnClickListener {
+        binding.oneBtn.setOnClickListener {
             expression += "1"
-            result.text = expression
+            binding.result.text = expression
         }
-        twoBtn.setOnClickListener {
+        binding.twoBtn.setOnClickListener {
             expression += "2"
-            result.text = expression
+            binding.result.text = expression
         }
-        threeBtn.setOnClickListener {
+        binding.threeBtn.setOnClickListener {
             expression += "3"
-            result.text = expression
+            binding.result.text = expression
         }
-        fourBtn.setOnClickListener {
+        binding.fourBtn.setOnClickListener {
             expression += "4"
-            result.text = expression
+            binding.result.text = expression
         }
-        fiveBtn.setOnClickListener {
+        binding.fiveBtn.setOnClickListener {
             expression += "5"
-            result.text = expression
+            binding.result.text = expression
         }
-        sixBtn.setOnClickListener {
+        binding.sixBtn.setOnClickListener {
             expression += "6"
-            result.text = expression
+            binding.result.text = expression
         }
-        sevenBtn.setOnClickListener {
+        binding.sevenBtn.setOnClickListener {
             expression += "7"
-            result.text = expression
+            binding.result.text = expression
         }
-        eightBtn.setOnClickListener {
+        binding.eightBtn.setOnClickListener {
             expression += "8"
-            result.text = expression
+            binding.result.text = expression
         }
-        nineBtn.setOnClickListener {
+        binding.nineBtn.setOnClickListener {
             expression += "9"
-            result.text = expression
+            binding.result.text = expression
         }
-        zeroBtn.setOnClickListener {
+        binding.zeroBtn.setOnClickListener {
             expression += "0"
-            result.text = expression
+            binding.result.text = expression
         }
-        pointBtn.setOnClickListener {
+        binding.pointBtn.setOnClickListener {
             if (!expression.last().toString().isDigitsOnly()) {
                 expression != getString(R.string.value_error)
                 Toast.makeText(this, getString(R.string.value_error), Toast.LENGTH_SHORT).show()
             } else {
                 expression += "."
-                result.text = expression
+                binding.result.text = expression
             }
         }
 
-        deleteBtn.setOnClickListener {
+        binding.deletBtn.setOnClickListener {
             val n = expression.length
             if (n > 0) {
                 expression = expression.substring(0, n - 1)
             }
 
-            result.text = expression
+            binding.result.text = expression
         }
-        clearBtn.setOnClickListener {
+        binding.clearBtn.setOnClickListener {
             expression = ""
-            result.text = expression
+            binding.result.text = expression
             listOrder.clear()
             resultStack.clear()
             postFixStack.clear()
         }
-        plusBtn.setOnClickListener {
+        binding.plusBtn.setOnClickListener {
             expression += "+"
-            result.text = expression
+            binding.result.text = expression
         }
-        minusBtn.setOnClickListener {
+        binding.minusBtn.setOnClickListener {
             expression += "-"
-            result.text = expression
+            binding.result.text = expression
         }
-        multiplyBtn.setOnClickListener {
+        binding.multiplyBtn.setOnClickListener {
             expression += "*"
-            result.text = expression
+            binding.result.text = expression
         }
-        divideBtn.setOnClickListener {
+        binding.divideBtn.setOnClickListener {
             expression += "/"
-            result.text = expression
+            binding.result.text = expression
         }
-        leftParenthesis.setOnClickListener {
+        binding.leftParenthesis.setOnClickListener {
             expression += "("
         }
-        rightParenthesis.setOnClickListener {
+        binding.rightParenthesis.setOnClickListener {
             expression += ")"
-            result.text = expression
+            binding.result.text = expression
         }
-        calculatorBtn.setOnClickListener {
+        binding.equalBtn.setOnClickListener {
             saveExpression = expression
             postFix()
-            result.text = expression
+            binding.result.text = expression
             if (expression != getString(R.string.value_error) && expression != getString(R.string.value_zero)) {
                 when (val number = expression.toDouble().toInt()) {
                     in 0..10 -> {
-                        result.setBackgroundColor(Color.YELLOW)
+                        binding.result.setBackgroundColor(Color.YELLOW)
                     }
                     in 11..100 -> {
-                        result.setBackgroundColor(Color.GREEN)
+                        binding.result.setBackgroundColor(Color.GREEN)
                     }
 
                     in 101..1000 -> {
-                        result.setBackgroundColor(Color.RED)
+                        binding.result.setBackgroundColor(Color.RED)
                     }
 
                     else -> {
-                        result.setBackgroundColor(Color.BLUE)
+                        binding.result.setBackgroundColor(Color.BLUE)
                     }
                 }
             } else {
                 expression = ""
-                result.text = expression
+                binding.result.text = expression
             }
 
         }
