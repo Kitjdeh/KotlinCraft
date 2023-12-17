@@ -18,7 +18,6 @@ class RecordViewModel : ViewModel() {
 
     //recordUsecase 인스턴스 생성
     private val recordUseCase = RecordUseCase()
-
     //RecordList 데이터
     private val _records = MutableLiveData<List<DomainRecord>>()
     val records: LiveData<List<DomainRecord>>
@@ -32,10 +31,15 @@ class RecordViewModel : ViewModel() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun deleteRecord(record: DomainRecord) {
+    suspend fun deleteRecord(record: DomainRecord) {
         //백그라운드 스레드에서 데이터 삭제
-        CoroutineScope(Dispatchers.IO).launch {
+        val delete = CoroutineScope(Dispatchers.IO).launch {
             recordUseCase.deleteRecord(record)
+        }
+        //join으로 삭제 로직 종료를 대기
+        delete.join()
+        //삭제 로직이 끝난후 다시 데이터를 불러와서 수정된 데이터로 리스트 뷰가 변동 되도록 설정
+        CoroutineScope(Dispatchers.IO).launch {
             val records = recordUseCase.getRecord()
             _records.postValue(records)
         }
@@ -45,16 +49,10 @@ class RecordViewModel : ViewModel() {
         records.value!![start]
         val startRecord = DomainRecord(records.value!![start].id, records.value!![end].expression)
         val endRecord = DomainRecord(records.value!![end].id, records.value!![start].expression)
-        recordUseCase.changeRecord(startRecord, endRecord)
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val recordDao = db!!.recordDao()
-//            val startRecord = DomainRecord(records[start].id, records[end].expression)
-//            val endRecord = DomainRecord(records[end].id, records[start].expression)
-//            records[start] = startRecord
-//            records[end] = endRecord
-//            recordDao.updateRecord(startRecord)
-//            recordDao.updateRecord(endRecord)
-//            Log.d("작동 후", "${records}")
-//        }
+        CoroutineScope(Dispatchers.IO).launch {
+            recordUseCase.changeRecord(startRecord, endRecord)
+        }
     }
 }
+
+

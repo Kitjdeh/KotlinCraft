@@ -7,26 +7,18 @@ import android.os.Bundle
 import com.ncc.kotlincraft.presentation.listener.LongClickListener
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.util.Log
 import androidx.activity.viewModels
-import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.ncc.kotlincraft.presentation.view.record.adapter.callback.DragDropCallback
-import com.ncc.kotlincraft.R
 import com.ncc.kotlincraft.presentation.view.record.adapter.RecordAdapter
-import com.ncc.kotlincraft.data.db.RecordDatabase
-import com.ncc.kotlincraft.databinding.ActivityMainBinding
 import com.ncc.kotlincraft.databinding.ActivityRecordBinding
 import com.ncc.kotlincraft.domain.model.DomainRecord
-import com.ncc.kotlincraft.domain.usecase.RecordUseCase
 import com.ncc.kotlincraft.presentation.view.main.MainActivity
-import com.ncc.kotlincraft.presentation.view.main.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class RecordActivity : AppCompatActivity(
 ) {
@@ -67,6 +59,7 @@ class RecordActivity : AppCompatActivity(
             startActivity(intent)
         }
     }
+
     //Adapter에서 실행 할 수 있게 세팅
     @SuppressLint("NotifyDataSetChanged")
     private fun deleteRecord(record: DomainRecord) {
@@ -75,7 +68,10 @@ class RecordActivity : AppCompatActivity(
             .setPositiveButton(
                 "삭제",
                 DialogInterface.OnClickListener { dialog, which ->
-                    viewModel.deleteRecord(record)
+                    // 삭제 -> 목록 재호출의 과정이기 때문에 코루틴(백그라운드IO)로 실행
+                    CoroutineScope(Dispatchers.IO).launch {
+                        viewModel.deleteRecord(record)
+                    }
                 }
             )
             .setNegativeButton("취소", null)
