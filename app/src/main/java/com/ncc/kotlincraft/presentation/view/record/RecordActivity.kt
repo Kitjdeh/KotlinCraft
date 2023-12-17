@@ -69,9 +69,9 @@ class RecordActivity : AppCompatActivity(
                 "삭제",
                 DialogInterface.OnClickListener { dialog, which ->
                     // 삭제 -> 목록 재호출의 과정이기 때문에 코루틴(백그라운드IO)로 실행
-                    CoroutineScope(Dispatchers.IO).launch {
-                        viewModel.deleteRecord(record)
-                    }
+//                    CoroutineScope(Dispatchers.IO).launch {
+                    viewModel.deleteRecord(record)
+//                    }
                 }
             )
             .setNegativeButton("취소", null)
@@ -82,7 +82,6 @@ class RecordActivity : AppCompatActivity(
     private fun changeRecord(start: Int, end: Int) {
         viewModel.changeRecord(start, end)
     }
-
 
     private fun initRecyclerView() {
         rv_record.apply {
