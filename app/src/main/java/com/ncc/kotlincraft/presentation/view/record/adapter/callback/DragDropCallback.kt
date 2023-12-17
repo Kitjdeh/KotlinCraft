@@ -1,4 +1,6 @@
-package com.ncc.kotlincraft.adapter.callback
+
+package com.ncc.kotlincraft.presentation.view.record.adapter.callback
+
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView

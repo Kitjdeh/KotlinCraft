@@ -1,4 +1,6 @@
-package com.ncc.kotlincraft.adapter
+
+package com.ncc.kotlincraft.presentation.view.record.adapter
+
 
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -9,7 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.ncc.kotlincraft.presentation.listener.DragDropListener
 import com.ncc.kotlincraft.presentation.listener.LongClickListener
 import com.ncc.kotlincraft.R
-import com.ncc.kotlincraft.data.db.entity.Record
+
+import com.ncc.kotlincraft.data.entity.Record
+import com.ncc.kotlincraft.domain.model.DomainRecord
+
 
 class RecordAdapter(
 ) :
@@ -19,7 +24,8 @@ class RecordAdapter(
         val expression = itemView.findViewById<TextView>(R.id.rv_item)
     }
 
-    private val Items = mutableListOf<Record>()
+
+    private val Items = mutableListOf<DomainRecord>()
 
     private lateinit var listener: LongClickListener
 
@@ -52,10 +58,12 @@ class RecordAdapter(
 //        }
 
         //받아온 clickListner함수에 해당 itemList 주입
+
         holder.itemView.setOnLongClickListener {
             listener.delete(Items[position])
             return@setOnLongClickListener true
         }
+
     }
 
     override fun getItemCount(): Int {
@@ -64,7 +72,9 @@ class RecordAdapter(
     }
 
     //
-    fun addItems(records: List<Record>) {
+
+    fun addItems(records: ArrayList<DomainRecord>) {
+
         this.Items.addAll(records)
     }
 
