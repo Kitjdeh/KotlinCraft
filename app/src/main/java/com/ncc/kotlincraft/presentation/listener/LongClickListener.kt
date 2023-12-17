@@ -1,7 +1,7 @@
 
 package com.ncc.kotlincraft.presentation.listener
 
-import com.ncc.kotlincraft.data.entity.Record
+import com.ncc.kotlincraft.data.db.entity.Record
 
 
 interface LongClickListener {

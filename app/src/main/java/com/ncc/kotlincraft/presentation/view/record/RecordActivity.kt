@@ -1,4 +1,5 @@
 
+
 package com.ncc.kotlincraft.presentation.view.record
 
 import android.annotation.SuppressLint
@@ -10,6 +11,7 @@ import android.os.Bundle
 package com.ncc.kotlincraft.presentation.view
 
 import android.annotation.SuppressLint
+
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -22,6 +24,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+
 import com.ncc.kotlincraft.presentation.view.record.adapter.callback.DragDropCallback
 import com.ncc.kotlincraft.R
 import com.ncc.kotlincraft.presentation.view.record.adapter.RecordAdapter
@@ -30,6 +33,7 @@ import com.ncc.kotlincraft.data.repository.RecordRepositoryImpl
 import com.ncc.kotlincraft.data.repository.local.RecordDataSourceImpl
 import com.ncc.kotlincraft.domain.model.DomainRecord
 import com.ncc.kotlincraft.domain.usecase.RecordUseCase
+
 
 import com.ncc.kotlincraft.presentation.view.main.MainActivity
 import kotlinx.coroutines.CoroutineScope
@@ -50,6 +54,7 @@ class RecordActivity : AppCompatActivity(
     //recordUsecase 인스턴스 생성
     private val recordUseCase = RecordUseCase()
 
+
     private val listener = object : LongClickListener {
         override fun delete(record: Record) {
             deleteRecord(record)
@@ -68,14 +73,17 @@ class RecordActivity : AppCompatActivity(
         setContentView(R.layout.activity_record)
 
 
+
         CoroutineScope(Dispatchers.IO).launch {
             records = recordUseCase.getRecord() as ArrayList<DomainRecord>
+
 
             withContext(Dispatchers.Main) {
                 recordAdapter.addItems(records)
                 recordAdapter.notifyDataSetChanged()
             }
         }
+
 
 
 
@@ -86,6 +94,7 @@ class RecordActivity : AppCompatActivity(
 
         recordAdapter.addItems(records)
         recordAdapter.notifyDataSetChanged()
+
 
 
         btnMainToRecord.setOnClickListener {
@@ -141,7 +150,6 @@ class RecordActivity : AppCompatActivity(
             layoutManager = LinearLayoutManager(this@RecordActivity)
             adapter = recordAdapter
         }
-
 
         recordAdapter.addListener(listener)
 

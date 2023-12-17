@@ -1,4 +1,6 @@
-package com.ncc.kotlincraft.db.entity
+
+package com.ncc.kotlincraft.data.db.entity
+
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

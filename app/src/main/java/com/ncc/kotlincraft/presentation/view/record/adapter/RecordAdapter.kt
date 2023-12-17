@@ -12,8 +12,10 @@ import com.ncc.kotlincraft.presentation.listener.DragDropListener
 import com.ncc.kotlincraft.presentation.listener.LongClickListener
 import com.ncc.kotlincraft.R
 
-import com.ncc.kotlincraft.data.entity.Record
+import com.ncc.kotlincraft.data.db.entity.Record
+
 import com.ncc.kotlincraft.domain.model.DomainRecord
+
 
 
 class RecordAdapter(
@@ -25,7 +27,9 @@ class RecordAdapter(
     }
 
 
+
     private val Items = mutableListOf<DomainRecord>()
+
 
     private lateinit var listener: LongClickListener
 
@@ -73,7 +77,9 @@ class RecordAdapter(
 
     //
 
+
     fun addItems(records: ArrayList<DomainRecord>) {
+
 
         this.Items.addAll(records)
     }
