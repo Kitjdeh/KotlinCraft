@@ -1,3 +1,4 @@
+
 package com.ncc.kotlincraft.presentation.view.main
 
 import android.content.Intent
@@ -11,10 +12,14 @@ import com.ncc.kotlincraft.R
 import com.ncc.kotlincraft.data.db.entity.Record
 import com.ncc.kotlincraft.data.db.RecordDatabase
 import com.ncc.kotlincraft.presentation.view.record.RecordActivity
+
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Stack
+
+import kotlin.math.round
+import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private var expression = ""
 
     //전달할 중위 표현식
+
 //    private var saveExpression = ""
 //
 //    //후위 표현식
@@ -33,10 +39,13 @@ class MainActivity : AppCompatActivity() {
 //    private val postFixStack = Stack<String>()
 //
 //    private val listOrder = mutableListOf<String>()
+=======
+
 
     var totalNumber = ""
     val stack = Stack<String>()
     val value = 0
+
 
     private val viewModel: MainViewModel by viewModels()
     private fun showToastMessage(message: String) {
@@ -209,6 +218,7 @@ class MainActivity : AppCompatActivity() {
         calculatorBtn.setOnClickListener {
 //            saveExpression = expression
             viewModel.postFix()
+
         }
     }
 }
