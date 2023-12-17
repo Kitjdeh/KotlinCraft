@@ -1,6 +1,6 @@
 package com.ncc.kotlincraft.data.mapper
 
-import com.ncc.kotlincraft.data.entity.Record
+import com.ncc.kotlincraft.data.db.entity.Record
 import com.ncc.kotlincraft.domain.model.DomainRecord
 
 fun List<Record>.mapperToDomainRecord(): List<DomainRecord> {

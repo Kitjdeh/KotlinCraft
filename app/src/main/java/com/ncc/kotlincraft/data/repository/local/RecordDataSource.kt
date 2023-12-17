@@ -1,6 +1,6 @@
 package com.ncc.kotlincraft.data.repository.local
 
-import com.ncc.kotlincraft.data.entity.Record
+import com.ncc.kotlincraft.data.db.entity.Record
 
 interface RecordDataSource {
     fun getRecord():List<Record>

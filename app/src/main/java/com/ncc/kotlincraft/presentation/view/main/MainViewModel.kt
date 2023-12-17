@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ncc.kotlincraft.data.db.RecordDatabase
 import com.ncc.kotlincraft.data.db.entity.Record
+import com.ncc.kotlincraft.domain.usecase.RecordUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,6 +15,11 @@ import kotlin.math.round
 import kotlin.math.roundToInt
 
 class MainViewModel : ViewModel() {
+
+    var db: RecordDatabase? = null
+
+    //recordUsecase 인스턴스 생성
+    private val recordUseCase = RecordUseCase()
 
     //외부에서 입력하게 될 경우 멀티 스레드 환경에서 일정한 값을 유지 할 수 없기 때문에 private선언 후 세터로 접근
     //뷰 모델에서 사용할 게터와 세터가 모두 있는 _expression
@@ -29,9 +35,9 @@ class MainViewModel : ViewModel() {
     val warning: LiveData<String>
         get() = _warning
 
-    private val _saveExpression = MutableLiveData<String>("")
-    val saveExpression: LiveData<String>
-        get() = _saveExpression
+//    private val _saveExpression = MutableLiveData<String>("")
+//    val saveExpression: LiveData<String>
+//        get() = _saveExpression
 
     //후위 표현식
     private val resultStack = Stack<Double>()
@@ -148,31 +154,20 @@ class MainViewModel : ViewModel() {
         }
         if (_warning.value == "") {
             val result = resultStack.pop().toString()
-            _saveExpression.postValue(_expression.value + "=" + result)
+//            _saveExpression.postValue(_expression.value + "=" + result)
             _expression.postValue(result)
             resultStack.clear()
             postFixStack.clear()
+            CoroutineScope(Dispatchers.IO).launch {
+                val record = Record(null, result)
+                db!!.recordDao().insertRecord(record)
+            }
         }
-//        if (_warning.value =="") {
-////            //결과값 저장
-////            val recordDao = db.recordDao()
-//            var saveExpression = _expression.value.toString()
-//            _expression.postValue(resultStack.pop().toString())
-//
-//            // DB에 접근 할 대 메인 쓰레드를 쓰면 에러가 나기 때문에 Dispathcer.io로 백그라운드 스레드에서 작업
-//            CoroutineScope(Dispatchers.IO).launch {
-//                saveExpression += "=$expression"
-//                val record = Record(null, saveExpression)
-//                db!!.recordDao().insertRecord(record)
-//            }
-//        }
     }
-
-
     fun clear() {
         _expression.value = ""
         resultStack.clear()
         postFixStack.clear()
-        _saveExpression.value = ""
+//        _saveExpression.value = ""
     }
 }

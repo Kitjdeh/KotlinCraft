@@ -32,9 +32,7 @@ abstract class RecordDatabase : RoomDatabase() {
                     RecordDatabase::class
                 ) {
                     //return 이 DB인데 DB값을 안바꿔서 수정
-
                     DB = Room.databaseBuilder(
-
                         context.applicationContext,
                         RecordDatabase::class.java, "record"
                     ).build()
