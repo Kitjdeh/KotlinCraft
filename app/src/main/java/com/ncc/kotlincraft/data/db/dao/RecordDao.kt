@@ -1,11 +1,15 @@
+
 package com.ncc.kotlincraft.data.db.dao
+
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+
 import com.ncc.kotlincraft.data.entity.Record
+
 
 @Dao
 interface RecordDao {
@@ -19,5 +23,6 @@ interface RecordDao {
     fun deleteAllRecords()
     @Update
     fun updateRecord(record: Record)
+
 //    fun updateRecord(vararg records: Record)
 }
