@@ -4,6 +4,7 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.ncc.kotlincraft.R
 import com.ncc.kotlincraft.data.db.RecordDatabase
 import com.ncc.kotlincraft.data.db.entity.Record
 import com.ncc.kotlincraft.domain.usecase.RecordUseCase
@@ -35,10 +36,6 @@ class MainViewModel : ViewModel() {
     val warning: LiveData<String>
         get() = _warning
 
-//    private val _saveExpression = MutableLiveData<String>("")
-//    val saveExpression: LiveData<String>
-//        get() = _saveExpression
-
     //후위 표현식
     private val resultStack = Stack<Double>()
 
@@ -59,6 +56,19 @@ class MainViewModel : ViewModel() {
         if (n > 0) {
             val newExpression = expression.value!!.substring(0, n - 1)
             _expression.postValue(newExpression)
+        }
+    }
+
+    fun writeExpression() {
+        val result = recordUseCase.writeRecord(_expression.value.toString())
+        //결과 값이 error 인 경우 warning 라이브 데이터에 전달, else인 경우 epression에 전달
+        when (result) {
+            "value_error" ->
+                _warning.value = "value_error"
+            "value_zero" ->
+                _warning.value = "value_zero"
+            else ->
+                _expression.postValue(result)
         }
     }
 
@@ -154,16 +164,17 @@ class MainViewModel : ViewModel() {
         }
         if (_warning.value == "") {
             val result = resultStack.pop().toString()
-//            _saveExpression.postValue(_expression.value + "=" + result)
             _expression.postValue(result)
             resultStack.clear()
             postFixStack.clear()
             CoroutineScope(Dispatchers.IO).launch {
-                val record = Record(null, result)
-                db!!.recordDao().insertRecord(record)
+                recordUseCase.writeRecord(result)
+//                val record = Record(null, result)
+//                db!!.recordDao().insertRecord(record)
             }
         }
     }
+
     fun clear() {
         _expression.value = ""
         resultStack.clear()

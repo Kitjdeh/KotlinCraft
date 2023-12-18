@@ -1,7 +1,4 @@
-
 package com.ncc.kotlincraft.presentation.view.record.adapter.callback
-
-
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.ncc.kotlincraft.presentation.listener.DragDropListener
@@ -24,7 +21,6 @@ class DragDropCallback(private val listener: DragDropListener):ItemTouchHelper.C
         target: RecyclerView.ViewHolder
     ): Boolean {
         listener.moveItem(viewHolder.adapterPosition,target.adapterPosition)
-//        Log.d("DragDropCallBack클래스","${viewHolder.adapterPosition} ${target.adapterPosition}")
         return true
     }
 

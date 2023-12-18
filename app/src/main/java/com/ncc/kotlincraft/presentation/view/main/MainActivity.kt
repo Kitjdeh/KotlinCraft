@@ -25,8 +25,6 @@ import kotlin.math.roundToInt
 
 class MainActivity : AppCompatActivity() {
 
-    private var db: RecordDatabase? = null
-
     //expression : 중위 표현식
     private var expression = ""
 
@@ -122,10 +120,9 @@ class MainActivity : AppCompatActivity() {
             viewModel.addExpression(")")
         }
         binding.equalBtn.setOnClickListener {
-            viewModel.postFix()
+            viewModel.writeExpression()
         }
     }
-
     private fun showToastMessage(message: String) {
         Toast.makeText(
             this,

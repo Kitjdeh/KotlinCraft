@@ -19,8 +19,5 @@ interface RecordDao {
     @Query("DELETE FROM record")
     fun deleteAllRecords()
     @Update
-
     fun updateRecord(record: Record)
-
-//    fun updateRecord(vararg records: Record)
 }

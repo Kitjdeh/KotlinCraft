@@ -30,17 +30,10 @@ class RecordViewModel : ViewModel() {
             _records.postValue(records)
         }
     }
-
-    @SuppressLint("NotifyDataSetChanged")
     fun deleteRecord(record: DomainRecord) {
         //백그라운드 스레드에서 데이터 삭제
-        val delete = CoroutineScope(Dispatchers.IO).launch {
-            recordUseCase.deleteRecord(record)
-            //삭제 로직이 끝난후 다시 데이터를 불러와서 수정된 데이터로 리스트 뷰가 변동 되도록 설정
-            withContext(Dispatchers.IO) {
-                val records = recordUseCase.getRecord()
-                _records.postValue(records)
-            }
+         CoroutineScope(Dispatchers.IO).launch {
+            _records.postValue(recordUseCase.deleteRecord(record))
         }
     }
 

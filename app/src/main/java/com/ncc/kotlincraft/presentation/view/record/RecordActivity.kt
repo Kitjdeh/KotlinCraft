@@ -34,7 +34,6 @@ class RecordActivity : AppCompatActivity(
         override fun delete(record: DomainRecord) {
             deleteRecord(record)
         }
-
         override fun change(start: Int, end: Int) {
             changeRecord(start, end)
         }
@@ -49,7 +48,7 @@ class RecordActivity : AppCompatActivity(
         setContentView(view)
         viewModel.records.observe(this) { result ->
             records = result as ArrayList<DomainRecord>
-            recordAdapter.addItems(records)
+            recordAdapter.changeItems(records)
             recordAdapter.notifyDataSetChanged()
         }
         rv_record = binding.rvRecord
@@ -60,20 +59,16 @@ class RecordActivity : AppCompatActivity(
         }
     }
 
-    //Adapter에서 실행 할 수 있게 세팅
+    //AlertDialog 세팅, 삭제 시 뷰모델 함수 실행 하도록 설정
     @SuppressLint("NotifyDataSetChanged")
     private fun deleteRecord(record: DomainRecord) {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("삭제하시겠습니까?")
             .setPositiveButton(
-                "삭제",
-                DialogInterface.OnClickListener { dialog, which ->
-                    // 삭제 -> 목록 재호출의 과정이기 때문에 코루틴(백그라운드IO)로 실행
-//                    CoroutineScope(Dispatchers.IO).launch {
-                    viewModel.deleteRecord(record)
-//                    }
-                }
-            )
+                "삭제"
+            ) { _, _ ->
+                viewModel.deleteRecord(record)
+            }
             .setNegativeButton("취소", null)
         builder.show()
     }

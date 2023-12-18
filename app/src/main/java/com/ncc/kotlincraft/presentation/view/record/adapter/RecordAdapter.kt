@@ -1,4 +1,3 @@
-
 package com.ncc.kotlincraft.presentation.view.record.adapter
 
 
@@ -7,15 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.text.isDigitsOnly
 import androidx.recyclerview.widget.RecyclerView
 import com.ncc.kotlincraft.presentation.listener.DragDropListener
 import com.ncc.kotlincraft.presentation.listener.LongClickListener
 import com.ncc.kotlincraft.R
-
-import com.ncc.kotlincraft.data.db.entity.Record
-
 import com.ncc.kotlincraft.domain.model.DomainRecord
-
 
 
 class RecordAdapter(
@@ -23,10 +19,8 @@ class RecordAdapter(
 //interface DragDropListener를 Adapter에 넣은 후 override로 Adapter의 작용을 추가한다.
     RecyclerView.Adapter<RecordAdapter.ViewHolder>(), DragDropListener {
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val expression = itemView.findViewById<TextView>(R.id.rv_item)
+        val expression = itemView.findViewById<TextView>(R.id.rv_item)!!
     }
-
-
 
     private val Items = mutableListOf<DomainRecord>()
 
@@ -43,26 +37,27 @@ class RecordAdapter(
         holder.expression.text = Items[position].expression
         // = 기준으로 결과 값 변경
         val result = Items[position].expression!!.split("=").last()
-//        if (result.isDigitsOnly()) {
-        when (val number = result.toDouble().toInt()) {
-            in 0..10 -> {
-                holder.expression.setBackgroundColor(Color.YELLOW)
-            }
-            in 11..100 -> {
-                holder.expression.setBackgroundColor(Color.GREEN)
-            }
-            in 101..1000 -> {
-                holder.expression.setBackgroundColor(Color.RED)
-            }
+        if (result.isDigitsOnly()) {
+            when (val number = result.toDouble().toInt()) {
+                in 0..10 -> {
+                    holder.expression.setBackgroundColor(Color.YELLOW)
+                }
 
-            else -> {
-                holder.expression.setBackgroundColor(Color.BLUE)
+                in 11..100 -> {
+                    holder.expression.setBackgroundColor(Color.GREEN)
+                }
+
+                in 101..1000 -> {
+                    holder.expression.setBackgroundColor(Color.RED)
+                }
+
+                else -> {
+                    holder.expression.setBackgroundColor(Color.BLUE)
+                }
             }
         }
-//        }
 
         //받아온 clickListner함수에 해당 itemList 주입
-
         holder.itemView.setOnLongClickListener {
             listener.delete(Items[position])
             return@setOnLongClickListener true
@@ -71,20 +66,18 @@ class RecordAdapter(
     }
 
     override fun getItemCount(): Int {
-
         return Items.count()
     }
 
-    //
-
-
     fun addItems(records: ArrayList<DomainRecord>) {
-
-
         this.Items.addAll(records)
     }
 
-    //    fun dragDropListener(listener: ItemTouchHelper.)
+    fun changeItems(records: ArrayList<DomainRecord>) {
+        this.Items.clear()
+        this.Items.addAll(records)
+    }
+
     fun addListener(listener: LongClickListener) {
         this.listener = listener
     }
