@@ -2,7 +2,10 @@ package com.ncc.kotlincraft.presentation.view.record.adapter
 
 
 import android.graphics.Color
+import android.util.Log
+import android.view.DragEvent
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ncc.kotlincraft.presentation.listener.DragDropListener
@@ -16,14 +19,15 @@ class RecordAdapter(
 ) :
 //interface DragDropListener를 Adapter에 넣은 후 override로 Adapter의 작용을 추가한다.
     RecyclerView.Adapter<RecordAdapter.ViewHolder>(), DragDropListener {
+
+
     inner class ViewHolder(binding: RecordRvItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val expression = binding.rvItem
+        val dragBtn = binding.rvItemDrag
     }
 
     private val items = mutableListOf<DomainRecord>()
-
     private lateinit var listener: LongClickListener
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.record_rv_item, parent, false)
@@ -32,6 +36,8 @@ class RecordAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.expression.text = items[position].expression
+
+
         // "=" 기준으로 결과 값 변경
         val result = items[position].expression!!.split("=").last()
         holder.expression.setTextColor(Color.BLACK)
@@ -43,6 +49,7 @@ class RecordAdapter(
             in 11..100 -> {
                 holder.expression.setBackgroundColor(Color.GREEN)
             }
+
             in 101..1000 -> {
                 holder.expression.setBackgroundColor(Color.RED)
             }
@@ -57,7 +64,6 @@ class RecordAdapter(
             listener.delete(items[position])
             return@setOnLongClickListener true
         }
-
     }
 
     override fun getItemCount(): Int {
@@ -81,7 +87,6 @@ class RecordAdapter(
     override fun moveItem(start: Int, end: Int) {
         notifyItemMoved(start, end)
         listener.change(start, end)
-
     }
 
 }

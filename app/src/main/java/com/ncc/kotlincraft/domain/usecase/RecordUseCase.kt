@@ -25,7 +25,9 @@ class RecordUseCase {
         return repository.getRecords()
     }
 
-    fun writeRecord(data: String): String = postFix(data)
+    fun calculate(data: String): String = postFix(data)
+
+    fun writeRecord(record: DomainRecord) = repository.writeRecord(record)
 
     fun deleteRecord(record: DomainRecord): List<DomainRecord>  = repository.deleteRecord(record)
 
@@ -85,10 +87,10 @@ class RecordUseCase {
         while (stack.isNotEmpty()) {
             postFixStack.add(stack.pop())
         }
-        return calculateStack(postFixStack, expression)
+        return calculateStack(postFixStack)
     }
 
-    private fun calculateStack(postFixStack: Stack<String>, expression: String): String {
+    private fun calculateStack(postFixStack: Stack<String>): String {
         //후위 표현식 - 전역 변수가 아닌 calculateStack의 지역 변수로 호출
         val resultStack = Stack<Double>()
         for (num in postFixStack) {
@@ -122,14 +124,14 @@ class RecordUseCase {
                 }
             }
         }
-        val result = resultStack.pop().toString()
+//        val result = resultStack.pop().toString()
         //연산 과정의 stack들이 함수 호출 시 자동 초기화 되기 때문에 clear 과정 생략
 //        resultStack.clear()
 //        postFixStack.clear()
-        CoroutineScope(Dispatchers.IO).launch {
-            val record = DomainRecord(id = null, expression = "$expression=$result")
-            repository.writeRecord(record)
-        }
-        return result
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val record = DomainRecord(id = null, expression = "$expression=$result")
+//            repository.writeRecord(record)
+//        }
+        return resultStack.pop().toString()
     }
 }

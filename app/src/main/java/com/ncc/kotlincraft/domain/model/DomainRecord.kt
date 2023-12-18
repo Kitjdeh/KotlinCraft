@@ -7,5 +7,9 @@ import androidx.room.PrimaryKey
 
 data class DomainRecord(
     val id: Int?,
-    var expression : String?,
+    var expression: String?,
 )
+
+fun filterColor(color: String) {
+
+}
