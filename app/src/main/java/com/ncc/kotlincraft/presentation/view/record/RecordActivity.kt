@@ -34,6 +34,7 @@ class RecordActivity : AppCompatActivity(
         override fun delete(record: DomainRecord) {
             deleteRecord(record)
         }
+
         override fun change(start: Int, end: Int) {
             changeRecord(start, end)
         }
@@ -56,6 +57,18 @@ class RecordActivity : AppCompatActivity(
         binding.btnRecordToMain.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
+        }
+        binding.yellow.setOnClickListener {
+            viewModel.filteringRecord("yellow")
+        }
+        binding.green.setOnClickListener {
+            viewModel.filteringRecord("green")
+        }
+        binding.red.setOnClickListener {
+            viewModel.filteringRecord("red")
+        }
+        binding.blue.setOnClickListener {
+            viewModel.filteringRecord("blue")
         }
     }
 

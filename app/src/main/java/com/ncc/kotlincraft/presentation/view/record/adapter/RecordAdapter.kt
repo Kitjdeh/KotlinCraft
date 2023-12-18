@@ -3,14 +3,12 @@ package com.ncc.kotlincraft.presentation.view.record.adapter
 
 import android.graphics.Color
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.text.isDigitsOnly
 import androidx.recyclerview.widget.RecyclerView
 import com.ncc.kotlincraft.presentation.listener.DragDropListener
 import com.ncc.kotlincraft.presentation.listener.LongClickListener
 import com.ncc.kotlincraft.R
+import com.ncc.kotlincraft.databinding.RecordRvItemBinding
 import com.ncc.kotlincraft.domain.model.DomainRecord
 
 
@@ -18,64 +16,61 @@ class RecordAdapter(
 ) :
 //interface DragDropListener를 Adapter에 넣은 후 override로 Adapter의 작용을 추가한다.
     RecyclerView.Adapter<RecordAdapter.ViewHolder>(), DragDropListener {
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val expression = itemView.findViewById<TextView>(R.id.rv_item)!!
+    inner class ViewHolder(binding: RecordRvItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        val expression = binding.rvItem
     }
 
-    private val Items = mutableListOf<DomainRecord>()
-
+    private val items = mutableListOf<DomainRecord>()
 
     private lateinit var listener: LongClickListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.record_rv_item, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(RecordRvItemBinding.bind(view))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.expression.text = Items[position].expression
-        // = 기준으로 결과 값 변경
-        val result = Items[position].expression!!.split("=").last()
-        if (result.isDigitsOnly()) {
-            when (val number = result.toDouble().toInt()) {
-                in 0..10 -> {
-                    holder.expression.setBackgroundColor(Color.YELLOW)
-                }
+        holder.expression.text = items[position].expression
+        // "=" 기준으로 결과 값 변경
+        val result = items[position].expression!!.split("=").last()
+        holder.expression.setTextColor(Color.BLACK)
+        when (val number = result.toDouble().toInt()) {
+            in 0..10 -> {
+                holder.expression.setBackgroundColor(Color.YELLOW)
+            }
 
-                in 11..100 -> {
-                    holder.expression.setBackgroundColor(Color.GREEN)
-                }
+            in 11..100 -> {
+                holder.expression.setBackgroundColor(Color.GREEN)
+            }
+            in 101..1000 -> {
+                holder.expression.setBackgroundColor(Color.RED)
+            }
 
-                in 101..1000 -> {
-                    holder.expression.setBackgroundColor(Color.RED)
-                }
-
-                else -> {
-                    holder.expression.setBackgroundColor(Color.BLUE)
-                }
+            else -> {
+                holder.expression.setTextColor(Color.WHITE)
+                holder.expression.setBackgroundColor(Color.BLUE)
             }
         }
-
         //받아온 clickListner함수에 해당 itemList 주입
-        holder.itemView.setOnLongClickListener {
-            listener.delete(Items[position])
+        holder.expression.setOnLongClickListener {
+            listener.delete(items[position])
             return@setOnLongClickListener true
         }
 
     }
 
     override fun getItemCount(): Int {
-        return Items.count()
+        return items.count()
     }
 
     fun addItems(records: ArrayList<DomainRecord>) {
-        this.Items.addAll(records)
+        this.items.addAll(records)
     }
 
     fun changeItems(records: ArrayList<DomainRecord>) {
-        this.Items.clear()
-        this.Items.addAll(records)
+        this.items.clear()
+        this.items.addAll(records)
     }
 
     fun addListener(listener: LongClickListener) {
@@ -84,7 +79,6 @@ class RecordAdapter(
 
     //ItemTouchHelper가 움직인 결과를 adapter에 적용한다.
     override fun moveItem(start: Int, end: Int) {
-//        Log.d("어댑터moveImte","${start},${end}")
         notifyItemMoved(start, end)
         listener.change(start, end)
 
