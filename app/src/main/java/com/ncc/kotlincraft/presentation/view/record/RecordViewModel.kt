@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ncc.kotlincraft.data.db.RecordDatabase
 import com.ncc.kotlincraft.domain.model.DomainRecord
 import com.ncc.kotlincraft.domain.usecase.RecordUseCase
@@ -25,24 +26,36 @@ class RecordViewModel : ViewModel() {
     val records: LiveData<List<DomainRecord>>
         get() = _records
 
-    fun getRecord() {
-        CoroutineScope(Dispatchers.IO).launch {
-            val result = recordUseCase.getRecord()
+    //필터링 조건 없이 전체를 불러오는 함수 - init과 동시에 한번만 작동
+    fun getAllRecord() = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val result = recordUseCase.getAllRecord()
             _records.postValue(result)
         }
     }
 
-    fun deleteRecord(record: DomainRecord) {
-        //백그라운드 스레드에서 데이터 삭제
-        CoroutineScope(Dispatchers.IO).launch {
-            _records.postValue(recordUseCase.deleteRecord(record))
+    //클릭한 색깔에 맞춰서 usecase요청하고 해당 값을 그대로 전달
+    fun getRecord(color: String) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            val result = recordUseCase.getRecord(color)
+            _records.postValue(result)
         }
     }
 
+    //백그라운드 스레드에서 데이터 삭제
+    fun deleteRecord(record: DomainRecord) = viewModelScope.launch {
+        withContext(Dispatchers.IO) {
+            _records.postValue(recordUseCase.deleteRecord(record))
+        };
+    }
+
     fun changeRecord(start: Int, end: Int) {
-        records.value!![start]
-        val startRecord = DomainRecord(records.value!![start].id, records.value!![end].expression)
-        val endRecord = DomainRecord(records.value!![end].id, records.value!![start].expression)
+        val startRecord =
+            records.value!![end].copy(id = start)
+//            DomainRecord(records.value!![start].id, records.value!![end].expression)
+        val endRecord =
+            records.value!![start].copy(id = end)
+//            DomainRecord(records.value!![end].id, records.value!![start].expression)
         records.value!![start].expression = startRecord.expression
         records.value!![end].expression = endRecord.expression
         CoroutineScope(Dispatchers.IO).launch {
@@ -50,42 +63,7 @@ class RecordViewModel : ViewModel() {
         }
     }
 
-    //usecase로 받아온 데이터를 filter로 색깔(string)에 따라 조건을 측정
-    @SuppressLint("NotifyDataSetChanged")
-    fun filteringRecord(color: String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val records = recordUseCase.getRecord()
-            when (color) {
-                "yellow" -> {
-                    val result = records.filter { it ->
-                        it.expression!!.split("=").last().toDouble().toInt() in 0..10
-                    }
-                    _records.postValue(result)
-                }
-                "green" -> {
-                    val result = records.filter { it ->
-                        it.expression!!.split("=").last().toDouble().toInt() in 11..100
-                    }
-                    _records.postValue(result)
-                }
-                "red" -> {
-                    val result = records.filter { it ->
-                        it.expression!!.split("=").last().toDouble().toInt() in 101..1000
-                    }
-                    _records.postValue(result)
-                }
 
-                "blue" -> {
-                    val result = records.filterNot { it ->
-                        it.expression!!.split("=").last().toDouble()
-                            .toInt() in 0..1000
-                    }
-                    _records.postValue(result)
-                }
-            }
-
-        }
-    }
 }
 
 

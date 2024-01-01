@@ -1,6 +1,7 @@
 package com.ncc.kotlincraft.domain.usecase
 
 
+import android.graphics.Color
 import android.util.Log
 import androidx.core.text.isDigitsOnly
 import com.ncc.kotlincraft.data.entity.Record
@@ -20,16 +21,48 @@ class RecordUseCase {
 
     //연산 용 stack
     private val stack = Stack<String>()
+    fun getAllRecord(): List<DomainRecord> = repository.getRecords()
 
-    fun getRecord(): List<DomainRecord> {
-        return repository.getRecords()
+    fun getRecord(color: String): List<DomainRecord> {
+        val records = repository.getRecords()
+        var result = records.filter { it ->
+            it.color == color
+        }
+        return result
     }
 
     fun calculate(data: String): String = postFix(data)
+    fun writeRecord(record: DomainRecord) {
+        // "=" 기준으로 결과 값 변경
+        val expression = record.expression!!.split("=").last()
+        when (val number = expression.toDouble().toInt()) {
+            in 0..10 -> {
+                val color = "yellow"
+                val result = record.copy(color = color)
+                repository.writeRecord(result)
+            }
 
-    fun writeRecord(record: DomainRecord) = repository.writeRecord(record)
+            in 11..100 -> {
+                val color = "green"
+                val result = record.copy(color = color)
+                repository.writeRecord(result)
+            }
 
-    fun deleteRecord(record: DomainRecord): List<DomainRecord>  = repository.deleteRecord(record)
+            in 101..1000 -> {
+                val color = "red"
+                val result = record.copy(color = color)
+                repository.writeRecord(result)
+            }
+
+            else -> {
+                val color = "blue"
+                val result = record.copy(color = color)
+                repository.writeRecord(result)
+            }
+        }
+    }
+
+    fun deleteRecord(record: DomainRecord): List<DomainRecord> = repository.deleteRecord(record)
 
     fun changeRecord(start: DomainRecord, end: DomainRecord) = repository.changeRecord(start, end)
 
@@ -64,6 +97,7 @@ class RecordUseCase {
                         // while 이 종료되었다면 stack의 맨뒤가 ( 이거나 stack이 비어있음 -> pop()로 정리
                         stack.pop()
                     }
+
                     "*", "/" -> {
                         // *과 / 가 나올경우 이전에 나온 *나 /가 먼저기 때문에 해당 값들을 후위 표현식에 넣어준다.
                         while (stack.isNotEmpty() && (stack.last() == "*" || stack.last() == "/")) {
@@ -71,6 +105,7 @@ class RecordUseCase {
                         }
                         stack.add(word)
                     }
+
                     "+", "-" -> {
                         // +와 - 는 우선순이가 제일 낮기 때문에 () 기준으로 가장 뒤에 가도록 후위 표현식에 배치한다.
                         while (stack.isNotEmpty() && stack.last() != "(") {
@@ -124,14 +159,6 @@ class RecordUseCase {
                 }
             }
         }
-//        val result = resultStack.pop().toString()
-        //연산 과정의 stack들이 함수 호출 시 자동 초기화 되기 때문에 clear 과정 생략
-//        resultStack.clear()
-//        postFixStack.clear()
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val record = DomainRecord(id = null, expression = "$expression=$result")
-//            repository.writeRecord(record)
-//        }
         return resultStack.pop().toString()
     }
 }

@@ -38,22 +38,18 @@ class RecordAdapter(
         holder.expression.text = items[position].expression
 
 
-        // "=" 기준으로 결과 값 변경
-        val result = items[position].expression!!.split("=").last()
+        // "Adapter에서 결과값의 크기 연산 하는 로직을 color 기반으로 변경"
         holder.expression.setTextColor(Color.BLACK)
-        when (val number = result.toDouble().toInt()) {
-            in 0..10 -> {
+        when (val color = items[position].color) {
+            "yellow" -> {
                 holder.expression.setBackgroundColor(Color.YELLOW)
             }
-
-            in 11..100 -> {
+            "green" -> {
                 holder.expression.setBackgroundColor(Color.GREEN)
             }
-
-            in 101..1000 -> {
+            "red" -> {
                 holder.expression.setBackgroundColor(Color.RED)
             }
-
             else -> {
                 holder.expression.setTextColor(Color.WHITE)
                 holder.expression.setBackgroundColor(Color.BLUE)

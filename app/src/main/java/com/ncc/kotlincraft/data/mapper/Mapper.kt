@@ -7,15 +7,17 @@ fun List<Record>.mapperToDomainRecord(): List<DomainRecord> {
     return this.toList().map {
         DomainRecord(
             it.id,
-            it.expression
+            it.expression,
+            it.color
         )
     }
 }
 
 fun DomainRecord.mapperToRecord(): Record {
-    return  Record(
+    return Record(
         this.id,
-        this.expression
+        this.expression,
+        this.color
     )
 
 }

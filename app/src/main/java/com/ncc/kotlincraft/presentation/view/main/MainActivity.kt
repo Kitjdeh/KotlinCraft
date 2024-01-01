@@ -39,8 +39,7 @@ class MainActivity : AppCompatActivity() {
 
 //        db = RecordDatabase.getInstance(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
         //뷰모델의 livedata를 observe 한다.
         viewModel.expression.observe(this) { expression ->

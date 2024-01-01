@@ -75,7 +75,8 @@ class MainViewModel : ViewModel() {
 
             else -> {
                 viewModelScope.launch {
-                    val record = DomainRecord(id = null, expression = "$first=$result")
+                    val record =
+                        DomainRecord(id = null, expression = "$first=$result", color = null)
                     _expression.postValue(result)
                     //뷰모델스코프는 기본적으로 메인스레드에서 작동하기 때문에 백그라운드 스레드로 변경
                     withContext(Dispatchers.IO) {

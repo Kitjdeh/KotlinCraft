@@ -45,33 +45,29 @@ class RecordActivity : AppCompatActivity(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRecordBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-        viewModel.records.observe(this) { result ->
-            records = result as ArrayList<DomainRecord>
-            recordAdapter.changeItems(records)
-            recordAdapter.notifyDataSetChanged()
-        }
+        setContentView(binding.root)
+
         rv_record = binding.rvRecord
         initRecyclerView()
+        initLiveData()
         binding.btnRecordToMain.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+        // view에선 클릭 시 해당 색상 string 값을 전달 만 함
         binding.yellow.setOnClickListener {
-            viewModel.filteringRecord("yellow")
+            viewModel.getRecord("yellow")
         }
         binding.green.setOnClickListener {
-            viewModel.filteringRecord("green")
+            viewModel.getRecord("green")
         }
         binding.red.setOnClickListener {
-            viewModel.filteringRecord("red")
+            viewModel.getRecord("red")
         }
         binding.blue.setOnClickListener {
-            viewModel.filteringRecord("blue")
+            viewModel.getRecord("blue")
         }
     }
-
     //AlertDialog 세팅, 삭제 시 뷰모델 함수 실행 하도록 설정
     @SuppressLint("NotifyDataSetChanged")
     private fun deleteRecord(record: DomainRecord) {
@@ -100,7 +96,15 @@ class RecordActivity : AppCompatActivity(
         val dragDropCallback = DragDropCallback(recordAdapter)
         val itemTouchHelper = ItemTouchHelper(dragDropCallback)
         itemTouchHelper.attachToRecyclerView(rv_record)
-        viewModel.getRecord()
+        viewModel.getAllRecord()
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun initLiveData(){
+        viewModel.records.observe(this) { result ->
+            records = result as ArrayList<DomainRecord>
+            recordAdapter.changeItems(records)
+            recordAdapter.notifyDataSetChanged()
+        }
     }
 
 }
