@@ -1,21 +1,23 @@
 package com.ncc.kotlincraft.data.mapper
 
-import com.ncc.kotlincraft.data.entity.Record
+import com.ncc.kotlincraft.data.db.entity.Record
 import com.ncc.kotlincraft.domain.model.DomainRecord
 
 fun List<Record>.mapperToDomainRecord(): List<DomainRecord> {
     return this.toList().map {
         DomainRecord(
             it.id,
-            it.expression
+            it.expression,
+            it.color
         )
     }
 }
 
 fun DomainRecord.mapperToRecord(): Record {
-    return  Record(
+    return Record(
         this.id,
-        this.expression
+        this.expression,
+        this.color
     )
 
 }

@@ -1,161 +1,110 @@
-
-
 package com.ncc.kotlincraft.presentation.view.record
 
 import android.annotation.SuppressLint
-
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
-package com.ncc.kotlincraft.presentation.view
-
-import android.annotation.SuppressLint
-
+import com.ncc.kotlincraft.presentation.listener.LongClickListener
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.util.Log
-
-import androidx.appcompat.widget.AppCompatButton
+import androidx.activity.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
-
 import com.ncc.kotlincraft.presentation.view.record.adapter.callback.DragDropCallback
-import com.ncc.kotlincraft.R
 import com.ncc.kotlincraft.presentation.view.record.adapter.RecordAdapter
-import com.ncc.kotlincraft.data.db.RecordDatabase
-import com.ncc.kotlincraft.data.repository.RecordRepositoryImpl
-import com.ncc.kotlincraft.data.repository.local.RecordDataSourceImpl
+import com.ncc.kotlincraft.databinding.ActivityRecordBinding
 import com.ncc.kotlincraft.domain.model.DomainRecord
-import com.ncc.kotlincraft.domain.usecase.RecordUseCase
-
-
 import com.ncc.kotlincraft.presentation.view.main.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class RecordActivity : AppCompatActivity(
 ) {
-    var db: RecordDatabase? = null
     private lateinit var rv_record: RecyclerView
+    private lateinit var binding: ActivityRecordBinding
 
-
+    private val viewModel: RecordViewModel by viewModels()
 
     // 받아올 records를 사용할 record List 생성
     var records = arrayListOf<DomainRecord>()
 
-    //recordUsecase 인스턴스 생성
-    private val recordUseCase = RecordUseCase()
-
-
     private val listener = object : LongClickListener {
-        override fun delete(record: Record) {
+        override fun delete(record: DomainRecord) {
             deleteRecord(record)
         }
+
         override fun change(start: Int, end: Int) {
             changeRecord(start, end)
         }
     }
-
-
     private val recordAdapter = RecordAdapter()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_record)
+        binding = ActivityRecordBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-
-
-        CoroutineScope(Dispatchers.IO).launch {
-            records = recordUseCase.getRecord() as ArrayList<DomainRecord>
-
-
-            withContext(Dispatchers.Main) {
-                recordAdapter.addItems(records)
-                recordAdapter.notifyDataSetChanged()
-            }
-        }
-
-
-
-
-        val btnMainToRecord = findViewById<AppCompatButton>(R.id.btn_recordToMain)
-        rv_record = findViewById<RecyclerView>(R.id.rv_record)
-
+        rv_record = binding.rvRecord
         initRecyclerView()
-
-        recordAdapter.addItems(records)
-        recordAdapter.notifyDataSetChanged()
-
-
-
-        btnMainToRecord.setOnClickListener {
+        initLiveData()
+        binding.btnRecordToMain.setOnClickListener {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
+        // view에선 클릭 시 해당 색상 string 값을 전달 만 함
+        binding.yellow.setOnClickListener {
+            viewModel.getRecord("yellow")
+        }
+        binding.green.setOnClickListener {
+            viewModel.getRecord("green")
+        }
+        binding.red.setOnClickListener {
+            viewModel.getRecord("red")
+        }
+        binding.blue.setOnClickListener {
+            viewModel.getRecord("blue")
+        }
     }
-
-
-    //Adapter에서 실행 할 수 있게 세팅
+    //AlertDialog 세팅, 삭제 시 뷰모델 함수 실행 하도록 설정
     @SuppressLint("NotifyDataSetChanged")
-    private fun deleteRecord(record: Record) {
+    private fun deleteRecord(record: DomainRecord) {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("삭제하시겠습니까?")
             .setPositiveButton(
-                "삭제",
-                DialogInterface.OnClickListener { dialog, which ->
-                    //백그라운드 스레드에서 데이터 삭제
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val recordDao = db!!.recordDao()
-                        recordDao.deleteRecord(record)
-                        records = recordDao.getAll() as ArrayList<Record>
-                        withContext(Dispatchers.Main) {
-//                            recordAdapter.addItems(records)
-                            recordAdapter.notifyDataSetChanged()
-                        }
-                    }
-                }
-            )
+                "삭제"
+            ) { _, _ ->
+                viewModel.deleteRecord(record)
+            }
             .setNegativeButton("취소", null)
         builder.show()
     }
 
-
     // start~end가 아니라 한칸 씩 작동하게 설정
     private fun changeRecord(start: Int, end: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val recordDao = db!!.recordDao()
-            val startRecord = Record(records[start].id, records[end].expression)
-            val endRecord = Record(records[end].id, records[start].expression)
-            records[start] = startRecord
-            records[end] = endRecord
-            recordDao.updateRecord(startRecord)
-            recordDao.updateRecord(endRecord)
-            Log.d("작동 후", "${records}")
-        }
+        viewModel.changeRecord(start, end)
     }
 
-
     private fun initRecyclerView() {
-
         rv_record.apply {
             layoutManager = LinearLayoutManager(this@RecordActivity)
             adapter = recordAdapter
         }
-
         recordAdapter.addListener(listener)
-
         val dragDropCallback = DragDropCallback(recordAdapter)
         val itemTouchHelper = ItemTouchHelper(dragDropCallback)
         itemTouchHelper.attachToRecyclerView(rv_record)
+        viewModel.getAllRecord()
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun initLiveData(){
+        viewModel.records.observe(this) { result ->
+            records = result as ArrayList<DomainRecord>
+            recordAdapter.changeItems(records)
+            recordAdapter.notifyDataSetChanged()
+        }
     }
 
 }
